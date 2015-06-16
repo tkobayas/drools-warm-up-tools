@@ -1,0 +1,17 @@
+package com.github.tkobayas.drools.warmup
+ 
+import com.github.tkobayas.drools.warmup.*;
+ 
+rule "Hello World"
+    when
+        p : Person( age < 30 && name == "John" )
+        e : Employee( age < p.age )
+        p2 : Person( age < e.age, name == "George" )
+        e2 : Employee( age < p.age + 1, this != e )
+    then
+        System.out.println( "Hello, " + p.getName() );
+        System.out.println( "Hello, " + e.getName() );
+        System.out.println( "Hello, " + p2.getName() );
+        System.out.println( "Hello, " + e2.getName() );
+end
+
