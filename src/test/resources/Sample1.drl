@@ -1,6 +1,6 @@
-package com.github.tkobayas.drools.warmup
+package com.sample
  
-import com.github.tkobayas.drools.warmup.*;
+import com.sample.*;
  
 rule "Hello World"
     when
@@ -14,4 +14,3 @@ rule "Hello World"
         System.out.println( "Hello, " + p2.getName() );
         System.out.println( "Hello, " + e2.getName() );
 end
-

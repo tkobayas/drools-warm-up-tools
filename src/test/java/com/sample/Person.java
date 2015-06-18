@@ -1,4 +1,4 @@
-package com.github.tkobayas.drools.warmup;
+package com.sample;
 
 public class Person {
 

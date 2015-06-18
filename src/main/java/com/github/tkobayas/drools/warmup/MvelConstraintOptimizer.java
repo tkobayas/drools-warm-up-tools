@@ -18,6 +18,5 @@ import org.drools.core.spi.Constraint;
 import org.kie.api.KieBase;
 
 public class MvelConstraintOptimizer {
-    
 
 }

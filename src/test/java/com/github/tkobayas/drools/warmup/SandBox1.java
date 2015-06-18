@@ -4,13 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.drools.core.io.impl.ClassPathResource;
 import org.drools.core.rule.constraint.MvelConstraint;
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
+import org.kie.api.builder.KieFileSystem;
+import org.kie.api.io.ResourceType;
 import org.kie.api.logger.KieRuntimeLogger;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.internal.KnowledgeBase;
+import org.kie.internal.KnowledgeBaseFactory;
+import org.kie.internal.builder.KnowledgeBuilder;
+import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.builder.conf.RuleEngineOption;
 
 import com.sample.Employee;
@@ -19,32 +26,26 @@ import com.sample.Person;
 /**
  * Not JUnit TestCase at this moment
  */
-public class DroolsTest {
+public class SandBox1 {
 
     public static final void main(String[] args) {
         try {
 
             System.setProperty("drools.dump.dir", "/home/tkobayas/tmp");
 
-            // load up the knowledge base
             KieServices ks = KieServices.Factory.get();
-            KieContainer kContainer = ks.getKieClasspathContainer();
-            KieBaseConfiguration conf = ks.newKieBaseConfiguration();
-            // conf.setOption(RuleEngineOption.RETEOO);
-            KieBase kbase = kContainer.newKieBase(conf);
-
-            // Optimize
-            List<Object> factList = new ArrayList<Object>();
-            // MvelConstraintOptimizer.optimize(kbase, factList);
-
-            MvelConstraintCollector reteDumper = new MvelConstraintCollector();
-            reteDumper.traverseRete(kbase);
+            KieFileSystem kfs = ks.newKieFileSystem();
+            kfs.write("src/main/resources/Sample1.drl", ks.getResources().newClassPathResource("Sample1.drl"));
+            ks.newKieBuilder( kfs ).buildAll();
+            KieContainer kContainer = ks.newKieContainer(ks.getRepository().getDefaultReleaseId());
+            KieBase kbase = kContainer.getKieBase();
+            
+            MvelConstraintCollector collector = new MvelConstraintCollector(true);
+            collector.traverseRete(kbase);
             
             System.out.println();
 
             KieSession kSession = kbase.newKieSession();
-
-            KieRuntimeLogger logger = ks.getLoggers().newFileLogger(kSession, "test");
 
             // go !
             Person john = new Person("John", 25);
@@ -57,9 +58,6 @@ public class DroolsTest {
             kSession.insert(ringo);
 
             kSession.fireAllRules();
-
-            logger.close();
-
 
         } catch (Throwable t) {
             t.printStackTrace();

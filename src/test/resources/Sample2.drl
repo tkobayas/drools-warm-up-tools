@@ -1,0 +1,804 @@
+package com.sample
+import com.sample.Person
+
+global java.util.List resultList;
+
+rule "rule0"
+  when
+    $p : Person( age >= 0 && age < 5 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule1"
+  when
+    $p : Person( age >= 5 && age < 10 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule2"
+  when
+    $p : Person( age >= 10 && age < 15 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule3"
+  when
+    $p : Person( age >= 15 && age < 20 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule4"
+  when
+    $p : Person( age >= 20 && age < 25 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule5"
+  when
+    $p : Person( age >= 25 && age < 30 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule6"
+  when
+    $p : Person( age >= 30 && age < 35 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule7"
+  when
+    $p : Person( age >= 35 && age < 40 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule8"
+  when
+    $p : Person( age >= 40 && age < 45 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule9"
+  when
+    $p : Person( age >= 45 && age < 50 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule10"
+  when
+    $p : Person( age >= 50 && age < 55 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule11"
+  when
+    $p : Person( age >= 55 && age < 60 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule12"
+  when
+    $p : Person( age >= 60 && age < 65 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule13"
+  when
+    $p : Person( age >= 65 && age < 70 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule14"
+  when
+    $p : Person( age >= 70 && age < 75 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule15"
+  when
+    $p : Person( age >= 75 && age < 80 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule16"
+  when
+    $p : Person( age >= 80 && age < 85 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule17"
+  when
+    $p : Person( age >= 85 && age < 90 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule18"
+  when
+    $p : Person( age >= 90 && age < 95 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule19"
+  when
+    $p : Person( age >= 95 && age < 100 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule20"
+  when
+    $p : Person( age >= 100 && age < 105 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule21"
+  when
+    $p : Person( age >= 105 && age < 110 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule22"
+  when
+    $p : Person( age >= 110 && age < 115 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule23"
+  when
+    $p : Person( age >= 115 && age < 120 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule24"
+  when
+    $p : Person( age >= 120 && age < 125 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule25"
+  when
+    $p : Person( age >= 125 && age < 130 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule26"
+  when
+    $p : Person( age >= 130 && age < 135 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule27"
+  when
+    $p : Person( age >= 135 && age < 140 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule28"
+  when
+    $p : Person( age >= 140 && age < 145 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule29"
+  when
+    $p : Person( age >= 145 && age < 150 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule30"
+  when
+    $p : Person( age >= 150 && age < 155 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule31"
+  when
+    $p : Person( age >= 155 && age < 160 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule32"
+  when
+    $p : Person( age >= 160 && age < 165 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule33"
+  when
+    $p : Person( age >= 165 && age < 170 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule34"
+  when
+    $p : Person( age >= 170 && age < 175 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule35"
+  when
+    $p : Person( age >= 175 && age < 180 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule36"
+  when
+    $p : Person( age >= 180 && age < 185 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule37"
+  when
+    $p : Person( age >= 185 && age < 190 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule38"
+  when
+    $p : Person( age >= 190 && age < 195 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule39"
+  when
+    $p : Person( age >= 195 && age < 200 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule40"
+  when
+    $p : Person( age >= 200 && age < 205 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule41"
+  when
+    $p : Person( age >= 205 && age < 210 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule42"
+  when
+    $p : Person( age >= 210 && age < 215 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule43"
+  when
+    $p : Person( age >= 215 && age < 220 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule44"
+  when
+    $p : Person( age >= 220 && age < 225 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule45"
+  when
+    $p : Person( age >= 225 && age < 230 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule46"
+  when
+    $p : Person( age >= 230 && age < 235 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule47"
+  when
+    $p : Person( age >= 235 && age < 240 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule48"
+  when
+    $p : Person( age >= 240 && age < 245 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule49"
+  when
+    $p : Person( age >= 245 && age < 250 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule50"
+  when
+    $p : Person( age >= 250 && age < 255 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule51"
+  when
+    $p : Person( age >= 255 && age < 260 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule52"
+  when
+    $p : Person( age >= 260 && age < 265 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule53"
+  when
+    $p : Person( age >= 265 && age < 270 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule54"
+  when
+    $p : Person( age >= 270 && age < 275 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule55"
+  when
+    $p : Person( age >= 275 && age < 280 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule56"
+  when
+    $p : Person( age >= 280 && age < 285 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule57"
+  when
+    $p : Person( age >= 285 && age < 290 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule58"
+  when
+    $p : Person( age >= 290 && age < 295 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule59"
+  when
+    $p : Person( age >= 295 && age < 300 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule60"
+  when
+    $p : Person( age >= 300 && age < 305 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule61"
+  when
+    $p : Person( age >= 305 && age < 310 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule62"
+  when
+    $p : Person( age >= 310 && age < 315 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule63"
+  when
+    $p : Person( age >= 315 && age < 320 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule64"
+  when
+    $p : Person( age >= 320 && age < 325 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule65"
+  when
+    $p : Person( age >= 325 && age < 330 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule66"
+  when
+    $p : Person( age >= 330 && age < 335 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule67"
+  when
+    $p : Person( age >= 335 && age < 340 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule68"
+  when
+    $p : Person( age >= 340 && age < 345 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule69"
+  when
+    $p : Person( age >= 345 && age < 350 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule70"
+  when
+    $p : Person( age >= 350 && age < 355 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule71"
+  when
+    $p : Person( age >= 355 && age < 360 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule72"
+  when
+    $p : Person( age >= 360 && age < 365 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule73"
+  when
+    $p : Person( age >= 365 && age < 370 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule74"
+  when
+    $p : Person( age >= 370 && age < 375 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule75"
+  when
+    $p : Person( age >= 375 && age < 380 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule76"
+  when
+    $p : Person( age >= 380 && age < 385 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule77"
+  when
+    $p : Person( age >= 385 && age < 390 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule78"
+  when
+    $p : Person( age >= 390 && age < 395 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule79"
+  when
+    $p : Person( age >= 395 && age < 400 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule80"
+  when
+    $p : Person( age >= 400 && age < 405 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule81"
+  when
+    $p : Person( age >= 405 && age < 410 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule82"
+  when
+    $p : Person( age >= 410 && age < 415 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule83"
+  when
+    $p : Person( age >= 415 && age < 420 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule84"
+  when
+    $p : Person( age >= 420 && age < 425 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule85"
+  when
+    $p : Person( age >= 425 && age < 430 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule86"
+  when
+    $p : Person( age >= 430 && age < 435 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule87"
+  when
+    $p : Person( age >= 435 && age < 440 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule88"
+  when
+    $p : Person( age >= 440 && age < 445 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule89"
+  when
+    $p : Person( age >= 445 && age < 450 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule90"
+  when
+    $p : Person( age >= 450 && age < 455 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule91"
+  when
+    $p : Person( age >= 455 && age < 460 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule92"
+  when
+    $p : Person( age >= 460 && age < 465 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule93"
+  when
+    $p : Person( age >= 465 && age < 470 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule94"
+  when
+    $p : Person( age >= 470 && age < 475 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule95"
+  when
+    $p : Person( age >= 475 && age < 480 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule96"
+  when
+    $p : Person( age >= 480 && age < 485 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule97"
+  when
+    $p : Person( age >= 485 && age < 490 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule98"
+  when
+    $p : Person( age >= 490 && age < 495 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end
+
+rule "rule99"
+  when
+    $p : Person( age >= 495 && age < 500 )
+  then
+    //System.out.println( kcontext.getRule().getName() + " : " + $p );
+    resultList.add( kcontext.getRule().getName() + " : " + $p );
+end

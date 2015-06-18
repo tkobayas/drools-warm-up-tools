@@ -1,8 +1,10 @@
 package com.github.tkobayas.drools.warmup;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.drools.core.common.BaseNode;
 import org.drools.core.impl.KnowledgeBaseImpl;
@@ -14,43 +16,86 @@ import org.drools.core.reteoo.ObjectSource;
 import org.drools.core.reteoo.ObjectTypeNode;
 import org.drools.core.reteoo.Rete;
 import org.drools.core.reteoo.Sink;
+import org.drools.core.rule.constraint.ConditionEvaluator;
+import org.drools.core.rule.constraint.MvelConditionEvaluator;
 import org.drools.core.rule.constraint.MvelConstraint;
 import org.drools.core.spi.BetaNodeFieldConstraint;
 import org.drools.core.spi.Constraint;
 import org.kie.api.KieBase;
 
-public class ReteDumper {
+public class MvelConstraintCollector {
 
+    private boolean dump = false;
+    
     private Set<MvelConstraint> mvelConstraintSet = new HashSet<MvelConstraint>();
 
-    public ReteDumper() {
+    public MvelConstraintCollector() {
+        this.dump = false;
     }
 
-    public void dumpRete(KieBase kbase) {
-        dumpRete(((KnowledgeBaseImpl) kbase).getRete());
-        
-        System.out.println();
-        System.out.println("-------------------------------");
-        System.out.println();
-        
-        listMvelConstraint();
+    public MvelConstraintCollector(boolean dump) {
+        this.dump = dump;
     }
 
-    private void listMvelConstraint() {
+    public void traverseRete(KieBase kbase) {
+        traverseRete(((KnowledgeBaseImpl) kbase).getRete());
+        
+        if (dump) {
+            System.out.println();
+            System.out.println("-------------------------------");
+            System.out.println();
+        
+            listMvelConstraint();
+        }
+    }
+
+    public void listMvelConstraint() {
         for (MvelConstraint mvelConstraint : mvelConstraintSet) {
-            System.out.println("[" + Integer.toHexString(mvelConstraint.hashCode()) + "] " + mvelConstraint);
+            boolean jitDone = isJitDone(mvelConstraint);
+            int invocationCounter = getInvocationCounter(mvelConstraint);
+            String status = jitDone ? "jit" : "mvel";
+            System.out.println("[" + Integer.toHexString(mvelConstraint.hashCode()) + ":" + invocationCounter + ":" + status + "] " + mvelConstraint);
         }
         System.out.println();
         System.out.println("--- mvelConstraintSet.size() = " + mvelConstraintSet.size());
     }
+    
+    public static boolean isJitDone(MvelConstraint mvelConstraint) {
+        ConditionEvaluator conditionEvaluator = null;
+        try {
+            Field field = MvelConstraint.class.getDeclaredField("conditionEvaluator");
+            field.setAccessible(true);
+            conditionEvaluator = (ConditionEvaluator)field.get(mvelConstraint);
+            System.out.println(conditionEvaluator);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (conditionEvaluator != null && !(conditionEvaluator instanceof MvelConditionEvaluator)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public static int getInvocationCounter(MvelConstraint mvelConstraint) {
+        AtomicInteger invocationCounter = null;
+        try {
+            Field field = MvelConstraint.class.getDeclaredField("invocationCounter");
+            field.setAccessible(true);
+            invocationCounter = (AtomicInteger)field.get(mvelConstraint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return invocationCounter.get();
+    }
 
-    public void dumpRete(Rete rete) {
+    public void traverseRete(Rete rete) {
         for (EntryPointNode entryPointNode : rete.getEntryPointNodes().values()) {
-            dumpNode(entryPointNode, "");
+            traverseNode(entryPointNode, "");
         }
     }
 
-    private void dumpNode(BaseNode node, String indent) {
+    private void traverseNode(BaseNode node, String indent) {
         String additionalInfo = "";
         if (node instanceof AlphaNode) {
             Constraint constraint = ((AlphaNode) node).getConstraint();
@@ -69,7 +114,9 @@ public class ReteDumper {
             }
         }
 
-        System.out.println(indent + node + (additionalInfo.isEmpty() ? "" : " ---> " + additionalInfo));
+        if (dump) {
+            System.out.println(indent + node + (additionalInfo.isEmpty() ? "" : " ---> " + additionalInfo));
+        }
 
         Sink[] sinks = null;
         if (node instanceof EntryPointNode) {
@@ -86,7 +133,7 @@ public class ReteDumper {
         if (sinks != null) {
             for (Sink sink : sinks) {
                 if (sink instanceof BaseNode) {
-                    dumpNode((BaseNode) sink, indent + "  ");
+                    traverseNode((BaseNode) sink, indent + "  ");
                 }
             }
         }
