@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.drools.compiler.lang.dsl.DSLMapParser.meta_section_return;
+import org.drools.core.base.ClassObjectType;
+import org.drools.core.common.DefaultFactHandle;
+import org.drools.core.common.InternalWorkingMemory;
 import org.drools.core.impl.KnowledgeBaseImpl;
 import org.drools.core.reteoo.AlphaNode;
 import org.drools.core.reteoo.BetaNode;
@@ -19,6 +22,7 @@ import org.drools.core.reteoo.ObjectSource;
 import org.drools.core.reteoo.ObjectTypeNode;
 import org.drools.core.reteoo.Rete;
 import org.drools.core.rule.TypeDeclaration;
+import org.drools.core.rule.constraint.ConditionEvaluator;
 import org.drools.core.rule.constraint.MvelConstraint;
 import org.drools.core.spi.BetaNodeFieldConstraint;
 import org.drools.core.spi.Constraint;
@@ -47,36 +51,57 @@ public class MvelConstraintOptimizer {
             factClassList.add(typeClass);
         }
         
-        // Warm-up
+        // Warm-up with direct Jitting
         System.out.println("--- Start warming-up");
+        
         KieSession ksession = kbase.newKieSession();
-        Map<String, Class<?>> globals = kbaseImpl.getGlobals();
-        for (String key : globals.keySet()) {
-            Class<?> globalClass = globals.get(key);
-            Object global = globalClass.newInstance();
-            ksession.setGlobal(key, global);
-        }
-        for (int i = 0; i < 20; i++) {
-            for (Class factClass : factClassList) {
-                Object fact = factClass.newInstance();
-                ksession.insert(fact);
+        Set<MvelConstraintInfo> mvelConstraintInfoSet = collector.getMvelConstraintInfoSet();
+        int id = 0;
+        for (MvelConstraintInfo mvelConstraintInfo : mvelConstraintInfoSet) {
+            MvelConstraint mvelConstraint = mvelConstraintInfo.getMvelConstraint();
+            Class<?> factClass = ((ClassObjectType)mvelConstraintInfo.getOtn().getObjectType()).getClassType();
+            Object fact = factClass.newInstance();
+            DefaultFactHandle handle = new DefaultFactHandle(id++, fact);
+            MvelConstraintUtils.createMvelConditionEvaluator(mvelConstraint, (InternalWorkingMemory)ksession);
+            ConditionEvaluator conditionEvaluator = MvelConstraintUtils.getConditionEvaluator(mvelConstraint);
+            try {
+                conditionEvaluator.evaluate(handle, (InternalWorkingMemory) ksession, null);
+                MvelConstraintUtils.executeJitting(mvelConstraint, handle, (InternalWorkingMemory)ksession, null);
+            } catch (Exception e) {
+                System.out.println(e);
             }
-            ksession.fireAllRules();
+            
         }
-        ksession.dispose();
+        
+        
+        // Warm-up with ksession.insert()
+//        KieSession ksession = kbase.newKieSession();
+//        Map<String, Class<?>> globals = kbaseImpl.getGlobals();
+//        for (String key : globals.keySet()) {
+//            Class<?> globalClass = globals.get(key);
+//            Object global = globalClass.newInstance();
+//            ksession.setGlobal(key, global);
+//        }
+//        for (int i = 0; i < 20; i++) {
+//            for (Class factClass : factClassList) {
+//                Object fact = factClass.newInstance();
+//                ksession.insert(fact);
+//            }
+//            ksession.fireAllRules();
+//        }
+//        ksession.dispose();
         
         // Wait for jit threads
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-        }
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//        }
         
         // Result
-        Set<MvelConstraint> mvelConstraintSet = collector.getMvelConstraintSet();
-        int total = mvelConstraintSet.size();
+        int total = mvelConstraintInfoSet.size();
         int jitted = 0;
-        for (MvelConstraint mvelConstraint : mvelConstraintSet) {
-            if (MvelConstraintUtils.isJitDone(mvelConstraint)) {
+        for (MvelConstraintInfo mvelConstraintInfo : mvelConstraintInfoSet) {
+            if (MvelConstraintUtils.isJitDone(mvelConstraintInfo.getMvelConstraint())) {
                 jitted++;
             }
         }

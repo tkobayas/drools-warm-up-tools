@@ -1,27 +1,15 @@
 package com.github.tkobayas.drools.warmup;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.drools.core.common.BaseNode;
-import org.drools.core.impl.KnowledgeBaseImpl;
-import org.drools.core.reteoo.AlphaNode;
-import org.drools.core.reteoo.BetaNode;
-import org.drools.core.reteoo.EntryPointNode;
-import org.drools.core.reteoo.LeftTupleSource;
-import org.drools.core.reteoo.ObjectSource;
-import org.drools.core.reteoo.ObjectTypeNode;
-import org.drools.core.reteoo.Rete;
-import org.drools.core.reteoo.Sink;
+import org.drools.core.common.InternalFactHandle;
+import org.drools.core.common.InternalWorkingMemory;
+import org.drools.core.reteoo.LeftTuple;
 import org.drools.core.rule.constraint.ConditionEvaluator;
 import org.drools.core.rule.constraint.MvelConditionEvaluator;
 import org.drools.core.rule.constraint.MvelConstraint;
-import org.drools.core.spi.BetaNodeFieldConstraint;
-import org.drools.core.spi.Constraint;
-import org.kie.api.KieBase;
 
 public class MvelConstraintUtils {
 
@@ -31,7 +19,6 @@ public class MvelConstraintUtils {
             Field field = MvelConstraint.class.getDeclaredField("conditionEvaluator");
             field.setAccessible(true);
             conditionEvaluator = (ConditionEvaluator)field.get(mvelConstraint);
-            //System.out.println(conditionEvaluator);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,6 +27,18 @@ public class MvelConstraintUtils {
         } else {
             return false;
         }
+    }
+    
+    public static ConditionEvaluator getConditionEvaluator(MvelConstraint mvelConstraint) {
+        ConditionEvaluator conditionEvaluator = null;
+        try {
+            Field field = MvelConstraint.class.getDeclaredField("conditionEvaluator");
+            field.setAccessible(true);
+            conditionEvaluator = (ConditionEvaluator)field.get(mvelConstraint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return conditionEvaluator;
     }
     
     public static int getInvocationCounter(MvelConstraint mvelConstraint) {
@@ -52,5 +51,26 @@ public class MvelConstraintUtils {
             e.printStackTrace();
         }
         return invocationCounter.get(); // max is 21
+    }
+
+    
+    public static void createMvelConditionEvaluator(MvelConstraint mvelConstraint, InternalWorkingMemory workingMemory) {
+        try {
+            Method method = MvelConstraint.class.getDeclaredMethod("createMvelConditionEvaluator", InternalWorkingMemory.class);
+            method.setAccessible(true);
+            method.invoke(mvelConstraint, workingMemory);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void executeJitting(MvelConstraint mvelConstraint, InternalFactHandle handle, InternalWorkingMemory workingMemory, LeftTuple leftTuple) {
+        try {
+            Method method = MvelConstraint.class.getDeclaredMethod("executeJitting", InternalFactHandle.class, InternalWorkingMemory.class, LeftTuple.class);
+            method.setAccessible(true);
+            method.invoke(mvelConstraint, handle, workingMemory, leftTuple);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
