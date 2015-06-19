@@ -45,49 +45,21 @@ public class MvelConstraintCollector {
             System.out.println("-------------------------------");
             System.out.println();
         
-            listMvelConstraint();
+            dumpMvelConstraint();
         }
     }
 
-    public void listMvelConstraint() {
+    public void dumpMvelConstraint() {
         for (MvelConstraint mvelConstraint : mvelConstraintSet) {
-            boolean jitDone = isJitDone(mvelConstraint);
-            int invocationCounter = getInvocationCounter(mvelConstraint);
+            boolean jitDone = MvelConstraintUtils.isJitDone(mvelConstraint);
+            int invocationCounter = MvelConstraintUtils.getInvocationCounter(mvelConstraint);
             String status = jitDone ? "jit" : "mvel";
             System.out.println("[" + Integer.toHexString(mvelConstraint.hashCode()) + ":" + invocationCounter + ":" + status + "] " + mvelConstraint);
         }
         System.out.println();
         System.out.println("--- mvelConstraintSet.size() = " + mvelConstraintSet.size());
     }
-    
-    public static boolean isJitDone(MvelConstraint mvelConstraint) {
-        ConditionEvaluator conditionEvaluator = null;
-        try {
-            Field field = MvelConstraint.class.getDeclaredField("conditionEvaluator");
-            field.setAccessible(true);
-            conditionEvaluator = (ConditionEvaluator)field.get(mvelConstraint);
-            System.out.println(conditionEvaluator);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (conditionEvaluator != null && !(conditionEvaluator instanceof MvelConditionEvaluator)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    public static int getInvocationCounter(MvelConstraint mvelConstraint) {
-        AtomicInteger invocationCounter = null;
-        try {
-            Field field = MvelConstraint.class.getDeclaredField("invocationCounter");
-            field.setAccessible(true);
-            invocationCounter = (AtomicInteger)field.get(mvelConstraint);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return invocationCounter.get();
-    }
+
 
     public void traverseRete(Rete rete) {
         for (EntryPointNode entryPointNode : rete.getEntryPointNodes().values()) {

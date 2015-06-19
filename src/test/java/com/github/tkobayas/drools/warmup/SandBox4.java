@@ -26,7 +26,7 @@ import com.sample.Person;
 /**
  * Not JUnit TestCase at this moment
  */
-public class SandBox2 {
+public class SandBox4 {
 
     public static final void main(String[] args) {
         try {
@@ -35,33 +35,15 @@ public class SandBox2 {
 
             KieServices ks = KieServices.Factory.get();
             KieFileSystem kfs = ks.newKieFileSystem();
-            kfs.write("src/main/resources/Sample2.drl", ks.getResources().newClassPathResource("Sample2.drl"));
+            kfs.write("src/main/resources/Sample1.drl", ks.getResources().newClassPathResource("Sample1.drl"));
             ks.newKieBuilder( kfs ).buildAll();
             KieContainer kContainer = ks.newKieContainer(ks.getRepository().getDefaultReleaseId());
             KieBase kbase = kContainer.getKieBase();
-
-            List<Object> factList = new ArrayList<Object>();
-
-            MvelConstraintCollector collector = new MvelConstraintCollector();
-            collector.traverseRete(kbase);
             
-            System.out.println();
-
-            KieSession kSession = kbase.newKieSession();
-            ArrayList resultList = new ArrayList();
-            kSession.setGlobal("resultList", resultList);
+            MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
+            optimizer.optimize(kbase);
             
-            // go !
-            Person john = new Person("John", 0); // if age == 0, only 1st level AlphaNode constraints are evaluated
-            kSession.insert(john);
-//            Person paul = new Person("Paul", 500); // if age == 500, all 1st level AlphaNode constraints are passed so 2nd level AlphaNode constraints are also evaluated
-//            kSession.insert(paul);
-
-            int fired = kSession.fireAllRules();
-            System.out.println("fired = " + fired);
-            
-            collector.dumpMvelConstraint();
-
+            optimizer.dumpMvelConstraint();
 
         } catch (Throwable t) {
             t.printStackTrace();

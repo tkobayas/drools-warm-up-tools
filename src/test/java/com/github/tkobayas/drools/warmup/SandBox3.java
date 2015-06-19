@@ -52,8 +52,6 @@ public class SandBox3 {
             kSession.setGlobal("resultList", resultList);
             
             for (int i = 0; i < 20; i++) {
-                Person john = new Person("John", 0);
-                kSession.insert(john);
                 Person paul = new Person("Paul", 500);
                 kSession.insert(paul);
             }
@@ -61,9 +59,9 @@ public class SandBox3 {
             int fired = kSession.fireAllRules();
             System.out.println("fired = " + fired);
             
-            Thread.sleep(5000);
+            Thread.sleep(5000); // Need to wait for Jitting threads finish
             
-            collector.listMvelConstraint();
+            collector.dumpMvelConstraint();
 
 
         } catch (Throwable t) {
