@@ -23,8 +23,8 @@ public class SandBox5 {
             KieBase kbase = kContainer.getKieBase();
             
             MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
-            optimizer.optimize(kbase);
-            
+            optimizer.analyze(kbase);
+            optimizer.optimizeAlphaNodeConstraints();
             optimizer.dumpMvelConstraint();
 
         } catch (Throwable t) {

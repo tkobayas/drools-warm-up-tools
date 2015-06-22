@@ -1,7 +1,7 @@
 package com.sample
 import com.sample.Person
 
-global java.util.ArrayList resultList;
+global java.util.List resultList;
 
 rule "rule0"
   when

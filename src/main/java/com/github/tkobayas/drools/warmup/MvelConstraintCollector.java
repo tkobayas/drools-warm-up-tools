@@ -2,7 +2,9 @@ package com.github.tkobayas.drools.warmup;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -11,6 +13,7 @@ import org.drools.core.impl.KnowledgeBaseImpl;
 import org.drools.core.reteoo.AlphaNode;
 import org.drools.core.reteoo.BetaNode;
 import org.drools.core.reteoo.EntryPointNode;
+import org.drools.core.reteoo.JoinNode;
 import org.drools.core.reteoo.LeftTupleSource;
 import org.drools.core.reteoo.ObjectSource;
 import org.drools.core.reteoo.ObjectTypeNode;
@@ -27,7 +30,9 @@ public class MvelConstraintCollector {
 
     private boolean dump = false;
     
-    private Set<MvelConstraintInfo> mvelConstraintInfoSet = new HashSet<MvelConstraintInfo>();
+    private Set<MvelConstraint> mvelConstraintSet = new HashSet<MvelConstraint>();
+    
+    private Map<MvelConstraint, MvelConstraintInfo> mvelConstraintInfoMap = new HashMap<MvelConstraint, MvelConstraintInfo>();
 
     public MvelConstraintCollector() {
         this.dump = false;
@@ -50,15 +55,14 @@ public class MvelConstraintCollector {
     }
 
     public void dumpMvelConstraint() {
-        for (MvelConstraintInfo mvelConstraintInfo : mvelConstraintInfoSet) {
-            MvelConstraint mvelConstraint = mvelConstraintInfo.getMvelConstraint();
+        for (MvelConstraint mvelConstraint : mvelConstraintSet) {
             boolean jitDone = MvelConstraintUtils.isJitDone(mvelConstraint);
             int invocationCounter = MvelConstraintUtils.getInvocationCounter(mvelConstraint);
             String status = jitDone ? "jit" : "mvel";
             System.out.println("[" + Integer.toHexString(mvelConstraint.hashCode()) + ":" + invocationCounter + ":" + status + "] " + mvelConstraint);
         }
         System.out.println();
-        System.out.println("--- mvelConstraintInfoSet.size() = " + mvelConstraintInfoSet.size());
+        System.out.println("--- mvelConstraintSet.size() = " + mvelConstraintSet.size());
     }
 
 
@@ -74,7 +78,8 @@ public class MvelConstraintCollector {
             Constraint constraint = ((AlphaNode) node).getConstraint();
             additionalInfo = constraint.getClass().getSimpleName() + " : " + constraint;
             if (constraint instanceof MvelConstraint) {
-                mvelConstraintInfoSet.add(new MvelConstraintInfo((MvelConstraint)constraint, otn, node));
+                mvelConstraintSet.add((MvelConstraint)constraint);
+                mvelConstraintInfoMap.put((MvelConstraint)constraint, new MvelConstraintInfo((MvelConstraint)constraint, otn, node));
             }
         }
         if (node instanceof BetaNode) {
@@ -82,7 +87,8 @@ public class MvelConstraintCollector {
             for (BetaNodeFieldConstraint constraint : constraints) {
                 additionalInfo += constraint.getClass().getSimpleName() + " : " + constraint + ", ";
                 if (constraint instanceof MvelConstraint) {
-                    mvelConstraintInfoSet.add(new MvelConstraintInfo((MvelConstraint)constraint, otn, node));
+                    mvelConstraintSet.add((MvelConstraint)constraint);
+                    mvelConstraintInfoMap.put((MvelConstraint)constraint, new MvelConstraintInfo((MvelConstraint)constraint, otn, node));
                 }
             }
         }
@@ -115,11 +121,21 @@ public class MvelConstraintCollector {
         }
     }
 
-    public Set<MvelConstraintInfo> getMvelConstraintInfoSet() {
-        return mvelConstraintInfoSet;
+    public Set<MvelConstraint> getMvelConstraintSet() {
+        return mvelConstraintSet;
     }
 
-    public void setMvelConstraintSet(Set<MvelConstraintInfo> mvelConstraintInfoSet) {
-        this.mvelConstraintInfoSet = mvelConstraintInfoSet;
+    public void setMvelConstraintSet(Set<MvelConstraint> mvelConstraintSet) {
+        this.mvelConstraintSet = mvelConstraintSet;
     }
+
+    public Map<MvelConstraint, MvelConstraintInfo> getMvelConstraintInfoMap() {
+        return mvelConstraintInfoMap;
+    }
+
+    public void setMvelConstraintInfoMap(Map<MvelConstraint, MvelConstraintInfo> mvelConstraintInfoMap) {
+        this.mvelConstraintInfoMap = mvelConstraintInfoMap;
+    }
+    
+    
 }

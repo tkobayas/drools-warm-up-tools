@@ -1,32 +1,19 @@
 package com.github.tkobayas.drools.warmup;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.HashMap;
 
-import org.drools.core.io.impl.ClassPathResource;
-import org.drools.core.rule.constraint.MvelConstraint;
 import org.kie.api.KieBase;
-import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieFileSystem;
-import org.kie.api.io.ResourceType;
-import org.kie.api.logger.KieRuntimeLogger;
 import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
-import org.kie.internal.KnowledgeBase;
-import org.kie.internal.KnowledgeBaseFactory;
-import org.kie.internal.builder.KnowledgeBuilder;
-import org.kie.internal.builder.KnowledgeBuilderFactory;
-import org.kie.internal.builder.conf.RuleEngineOption;
 
-import com.sample.Employee;
 import com.sample.Person;
 
 /**
  * Not JUnit TestCase at this moment
  */
-public class SandBox4 {
+public class SandBox6 {
 
     public static final void main(String[] args) {
         try {
@@ -35,14 +22,21 @@ public class SandBox4 {
 
             KieServices ks = KieServices.Factory.get();
             KieFileSystem kfs = ks.newKieFileSystem();
-            kfs.write("src/main/resources/Sample1.drl", ks.getResources().newClassPathResource("Sample1.drl"));
+            kfs.write("src/main/resources/Sample2.drl", ks.getResources().newClassPathResource("Sample2.drl"));
             ks.newKieBuilder( kfs ).buildAll();
             KieContainer kContainer = ks.newKieContainer(ks.getRepository().getDefaultReleaseId());
             KieBase kbase = kContainer.getKieBase();
             
             MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
             optimizer.analyze(kbase);
-            optimizer.optimizeAlphaNodeConstraints();
+            
+            Person p1 = new Person("John", 0);
+            Person p2 = new Person("Paul", 500);
+            Object[] facts = new Object[]{p1, p2};
+            HashMap<String, Object> globalMap = new HashMap<String, Object>();
+            globalMap.put("resultList", new ArrayList<String>());
+            optimizer.warmUpWithFacts(facts, globalMap);
+            
             optimizer.dumpMvelConstraint();
 
         } catch (Throwable t) {
