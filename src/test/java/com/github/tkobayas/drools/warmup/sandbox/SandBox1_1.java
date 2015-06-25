@@ -1,4 +1,4 @@
-package com.github.tkobayas.drools.warmup;
+package com.github.tkobayas.drools.warmup.sandbox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +20,14 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.builder.conf.RuleEngineOption;
 
+import com.github.tkobayas.drools.warmup.MvelConstraintCollector;
 import com.sample.Employee;
 import com.sample.Person;
 
 /**
  * Not JUnit TestCase at this moment
  */
-public class SandBox2 {
+public class SandBox1_1 {
 
     public static final void main(String[] args) {
         try {
@@ -35,33 +36,29 @@ public class SandBox2 {
 
             KieServices ks = KieServices.Factory.get();
             KieFileSystem kfs = ks.newKieFileSystem();
-            kfs.write("src/main/resources/Sample2.drl", ks.getResources().newClassPathResource("Sample2.drl"));
+            kfs.write("src/main/resources/Sample1.drl", ks.getResources().newClassPathResource("Sample1.drl"));
             ks.newKieBuilder( kfs ).buildAll();
             KieContainer kContainer = ks.newKieContainer(ks.getRepository().getDefaultReleaseId());
             KieBase kbase = kContainer.getKieBase();
-
-            List<Object> factList = new ArrayList<Object>();
-
-            MvelConstraintCollector collector = new MvelConstraintCollector();
+            
+            MvelConstraintCollector collector = new MvelConstraintCollector(true);
             collector.traverseRete(kbase);
             
             System.out.println();
 
             KieSession kSession = kbase.newKieSession();
-            ArrayList resultList = new ArrayList();
-            kSession.setGlobal("resultList", resultList);
-            
+
             // go !
-            Person john = new Person("John", 0); // if age == 0, only 1st level AlphaNode constraints are evaluated
+            Person john = new Person("John", 25);
             kSession.insert(john);
-//            Person paul = new Person("Paul", 500); // if age == 500, all 1st level AlphaNode constraints are passed so 2nd level AlphaNode constraints are also evaluated
-//            kSession.insert(paul);
+            Employee paul = new Employee("Paul", 23);
+            kSession.insert(paul);
+            Person george = new Person("George", 22);
+            kSession.insert(george);
+            Employee ringo = new Employee("Ringo", 25);
+            kSession.insert(ringo);
 
-            int fired = kSession.fireAllRules();
-            System.out.println("fired = " + fired);
-            
-            collector.dumpMvelConstraint();
-
+            kSession.fireAllRules();
 
         } catch (Throwable t) {
             t.printStackTrace();

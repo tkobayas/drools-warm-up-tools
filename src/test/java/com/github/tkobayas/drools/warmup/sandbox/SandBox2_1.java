@@ -1,4 +1,4 @@
-package com.github.tkobayas.drools.warmup;
+package com.github.tkobayas.drools.warmup.sandbox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +20,14 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.builder.conf.RuleEngineOption;
 
+import com.github.tkobayas.drools.warmup.MvelConstraintCollector;
 import com.sample.Employee;
 import com.sample.Person;
 
 /**
  * Not JUnit TestCase at this moment
  */
-public class SandBox3 {
+public class SandBox2_1 {
 
     public static final void main(String[] args) {
         try {
@@ -51,15 +52,14 @@ public class SandBox3 {
             ArrayList resultList = new ArrayList();
             kSession.setGlobal("resultList", resultList);
             
-            for (int i = 0; i < 20; i++) {
-                Person paul = new Person("Paul", 500);
-                kSession.insert(paul);
-            }
+            // go !
+            Person john = new Person("John", 0); // if age == 0, only 1st level AlphaNode constraints are evaluated
+            kSession.insert(john);
+//            Person paul = new Person("Paul", 500); // if age == 500, all 1st level AlphaNode constraints are passed so 2nd level AlphaNode constraints are also evaluated
+//            kSession.insert(paul);
 
             int fired = kSession.fireAllRules();
             System.out.println("fired = " + fired);
-            
-            Thread.sleep(5000); // Need to wait for Jitting threads finish
             
             collector.dumpMvelConstraint();
 

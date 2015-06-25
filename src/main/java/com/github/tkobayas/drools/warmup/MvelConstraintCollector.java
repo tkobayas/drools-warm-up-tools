@@ -44,14 +44,6 @@ public class MvelConstraintCollector {
 
     public void traverseRete(KieBase kbase) {
         traverseRete(((KnowledgeBaseImpl) kbase).getRete());
-        
-        if (dump) {
-            System.out.println();
-            System.out.println("-------------------------------");
-            System.out.println();
-        
-            dumpMvelConstraint();
-        }
     }
 
     public void dumpMvelConstraint() {

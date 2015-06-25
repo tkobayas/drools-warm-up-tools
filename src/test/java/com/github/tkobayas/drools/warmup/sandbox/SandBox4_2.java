@@ -1,4 +1,4 @@
-package com.github.tkobayas.drools.warmup;
+package com.github.tkobayas.drools.warmup.sandbox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,36 +8,44 @@ import org.kie.api.KieServices;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.runtime.KieContainer;
 
+import com.github.tkobayas.drools.warmup.MvelConstraintOptimizer;
+import com.sample.Employee;
 import com.sample.Person;
 
 /**
  * Not JUnit TestCase at this moment
  */
-public class SandBox6 {
+public class SandBox4_2 {
 
     public static final void main(String[] args) {
         try {
 
             System.setProperty("drools.dump.dir", "/home/tkobayas/tmp");
 
+            System.out.println("--- kbase build started");
+            long start = System.currentTimeMillis();
+            
             KieServices ks = KieServices.Factory.get();
             KieFileSystem kfs = ks.newKieFileSystem();
-            kfs.write("src/main/resources/Sample2.drl", ks.getResources().newClassPathResource("Sample2.drl"));
+            kfs.write("src/main/resources/Sample4.drl", ks.getResources().newClassPathResource("Sample4.drl"));
             ks.newKieBuilder( kfs ).buildAll();
             KieContainer kContainer = ks.newKieContainer(ks.getRepository().getDefaultReleaseId());
             KieBase kbase = kContainer.getKieBase();
             
-            MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
-            optimizer.analyze(kbase);
+            System.out.println("--- kbase build finished : elapsed time = "
+                    + (System.currentTimeMillis() - start) + "ms");
             
-            Person p1 = new Person("John", 0);
-            Person p2 = new Person("Paul", 500);
-            Object[] facts = new Object[]{p1, p2};
+            MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
+            optimizer.analyze(kbase, false);
+            
+            Person p = new Person("John", Integer.MAX_VALUE);
+            Employee e = new Employee("Paul", 100);
+            Object[] facts = new Object[]{p, e};
             HashMap<String, Object> globalMap = new HashMap<String, Object>();
             globalMap.put("resultList", new ArrayList<String>());
             optimizer.warmUpWithFacts(facts, globalMap);
             
-            optimizer.dumpMvelConstraint();
+            //optimizer.dumpMvelConstraint();
 
         } catch (Throwable t) {
             t.printStackTrace();

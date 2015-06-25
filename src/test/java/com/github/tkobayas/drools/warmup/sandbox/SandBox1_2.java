@@ -1,4 +1,4 @@
-package com.github.tkobayas.drools.warmup;
+package com.github.tkobayas.drools.warmup.sandbox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +20,14 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.builder.conf.RuleEngineOption;
 
+import com.github.tkobayas.drools.warmup.MvelConstraintOptimizer;
 import com.sample.Employee;
 import com.sample.Person;
 
 /**
  * Not JUnit TestCase at this moment
  */
-public class SandBox1 {
+public class SandBox1_2 {
 
     public static final void main(String[] args) {
         try {
@@ -40,24 +41,10 @@ public class SandBox1 {
             KieContainer kContainer = ks.newKieContainer(ks.getRepository().getDefaultReleaseId());
             KieBase kbase = kContainer.getKieBase();
             
-            MvelConstraintCollector collector = new MvelConstraintCollector(true);
-            collector.traverseRete(kbase);
-            
-            System.out.println();
-
-            KieSession kSession = kbase.newKieSession();
-
-            // go !
-            Person john = new Person("John", 25);
-            kSession.insert(john);
-            Employee paul = new Employee("Paul", 23);
-            kSession.insert(paul);
-            Person george = new Person("George", 22);
-            kSession.insert(george);
-            Employee ringo = new Employee("Ringo", 25);
-            kSession.insert(ringo);
-
-            kSession.fireAllRules();
+            MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
+            optimizer.analyze(kbase);
+            optimizer.optimizeAlphaNodeConstraints();
+            optimizer.dumpMvelConstraint();
 
         } catch (Throwable t) {
             t.printStackTrace();
