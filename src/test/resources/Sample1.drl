@@ -8,6 +8,8 @@ rule "Hello World"
         e : Employee( age < p.age )
         p2 : Person( age < e.age, name == "George" )
         e2 : Employee( age < p.age + 1, this != e )
+//        p3 : Person(name == "XXX")
+//        e3 : Employee(name == "YYY")
     then
         System.out.println( "Hello, " + p.getName() );
         System.out.println( "Hello, " + e.getName() );

@@ -83,8 +83,10 @@ public class MvelConstraintOptimizer {
         long start = System.currentTimeMillis();
 
         KieSession ksession = kbase.newKieSession();
-        for (String key : globalMap.keySet()) {
-            ksession.setGlobal(key, globalMap.get(key));
+        if (globalMap != null) {
+            for (String key : globalMap.keySet()) {
+                ksession.setGlobal(key, globalMap.get(key));
+            }
         }
         for (int i = 0; i < 20; i++) {
             List<FactHandle> handleList = new ArrayList<FactHandle>();
@@ -139,5 +141,29 @@ public class MvelConstraintOptimizer {
 
     public void dumpMvelConstraint() {
         collector.dumpMvelConstraint();
+    }
+    
+    public void reviewUnjittedMvelConstraint() {
+        System.out.println("--- reviewUnjittedMvelConstraint ---");
+        Map<MvelConstraint, MvelConstraintInfo> mvelConstraintInfoMap = collector.getMvelConstraintInfoMap();
+        for (MvelConstraint mvelConstraint : mvelConstraintInfoMap.keySet()) {
+            if (MvelConstraintUtils.isJitDone(mvelConstraint)) {
+                continue;
+            }
+            MvelConstraintInfo info = mvelConstraintInfoMap.get(mvelConstraint);
+            System.out.println(mvelConstraint);
+//            System.out.println("    ObjectTypeNode = " + info.getOtn());
+//            System.out.println("    parent = " + info.getParent());
+            System.out.println("    parentNodeConstraints");
+            Set<MvelConstraint> parentNodeConstraints = info.getParentNodeConstraints();
+            for (MvelConstraint parentNodeConstraint : parentNodeConstraints) {
+//                if (MvelConstraintUtils.isJitDone(parentNodeConstraint)) {
+//                    continue;
+//                }
+                System.out.println("        -> " + parentNodeConstraint);
+            }
+        }
+        System.out.println("-----------------------------------");
+
     }
 }

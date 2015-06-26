@@ -1,6 +1,7 @@
 package com.github.tkobayas.drools.warmup.sandbox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ import com.sample.Person;
 /**
  * Not JUnit TestCase at this moment
  */
-public class SandBox1_2 {
+public class SandBox1_3 {
 
     public static final void main(String[] args) {
         try {
@@ -43,8 +44,11 @@ public class SandBox1_2 {
             
             MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
             optimizer.analyze(kbase, true);
-            optimizer.optimizeAlphaNodeConstraints();
-//            optimizer.dumpMvelConstraint();
+            
+            Person p = new Person("John", 10000);
+            Object[] facts = new Object[]{p};
+            optimizer.warmUpWithFacts(facts, null);
+            
             optimizer.reviewUnjittedMvelConstraint();
 
         } catch (Throwable t) {

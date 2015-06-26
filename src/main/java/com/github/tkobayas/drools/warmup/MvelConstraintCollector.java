@@ -1,11 +1,13 @@
 package com.github.tkobayas.drools.warmup;
 
 import java.lang.reflect.Field;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.drools.core.common.BaseNode;
@@ -60,18 +62,26 @@ public class MvelConstraintCollector {
 
     public void traverseRete(Rete rete) {
         for (EntryPointNode entryPointNode : rete.getEntryPointNodes().values()) {
-            traverseNode(entryPointNode, null, "");
+            traverseNode(entryPointNode, null, new ArrayDeque<BaseNode>(), "");
         }
     }
 
-    private void traverseNode(BaseNode node, ObjectTypeNode otn, String indent) {
+    private void traverseNode(BaseNode node, ObjectTypeNode otn, ArrayDeque<BaseNode> parentNodeStack, String indent) {
         String additionalInfo = "";
         if (node instanceof AlphaNode) {
             Constraint constraint = ((AlphaNode) node).getConstraint();
             additionalInfo = constraint.getClass().getSimpleName() + " : " + constraint;
             if (constraint instanceof MvelConstraint) {
-                mvelConstraintSet.add((MvelConstraint)constraint);
-                mvelConstraintInfoMap.put((MvelConstraint)constraint, new MvelConstraintInfo((MvelConstraint)constraint, otn, node));
+                MvelConstraint mvelConstraint = (MvelConstraint)constraint;
+                mvelConstraintSet.add(mvelConstraint);
+                MvelConstraintInfo info = null;
+                if (mvelConstraintInfoMap.containsKey(mvelConstraint)) {
+                    info = mvelConstraintInfoMap.get(mvelConstraint);
+                } else {
+                    info = new MvelConstraintInfo(mvelConstraint, otn, node);
+                    mvelConstraintInfoMap.put(mvelConstraint, info);
+                }
+                info.addParentNodeConstraints(parentNodeStack);
             }
         }
         if (node instanceof BetaNode) {
@@ -79,8 +89,16 @@ public class MvelConstraintCollector {
             for (BetaNodeFieldConstraint constraint : constraints) {
                 additionalInfo += constraint.getClass().getSimpleName() + " : " + constraint + ", ";
                 if (constraint instanceof MvelConstraint) {
-                    mvelConstraintSet.add((MvelConstraint)constraint);
-                    mvelConstraintInfoMap.put((MvelConstraint)constraint, new MvelConstraintInfo((MvelConstraint)constraint, otn, node));
+                    MvelConstraint mvelConstraint = (MvelConstraint)constraint;
+                    mvelConstraintSet.add(mvelConstraint);
+                    MvelConstraintInfo info = null;
+                    if (mvelConstraintInfoMap.containsKey(mvelConstraint)) {
+                        info = mvelConstraintInfoMap.get(mvelConstraint);
+                    } else {
+                        info = new MvelConstraintInfo(mvelConstraint, otn, node);
+                        mvelConstraintInfoMap.put(mvelConstraint, info);
+                    }
+                    info.addParentNodeConstraints(parentNodeStack);
                 }
             }
         }
@@ -107,7 +125,9 @@ public class MvelConstraintCollector {
                     if (sink instanceof ObjectTypeNode) {
                         otn = (ObjectTypeNode)sink;
                     }
-                    traverseNode((BaseNode) sink, otn, indent + "  ");
+                    parentNodeStack.push((BaseNode)node); // not sink
+                    traverseNode((BaseNode) sink, otn, parentNodeStack, indent + "  ");
+                    parentNodeStack.pop();
                 }
             }
         }
