@@ -5,13 +5,15 @@
         <encoder>
             <!-- %l lowers performance -->
             <!--<pattern>%d [%t] %-5p %l%n  %m%n</pattern>-->
-            <pattern>%d [%t] %-5p %m%n</pattern>
+<!--             <pattern>%d [%t] %-5p %m%n</pattern> -->
+            <pattern>[%t] %-5p %m%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="org.kie" level="debug"/>
-    <logger name="org.drools" level="debug"/>
-
+    <logger name="org.kie" level="info"/>
+    <logger name="org.drools" level="info"/>
+    <logger name="com.github.tkobayas.drools.warmup" level="debug"/>
+    
     <root level="info"><!-- TODO We probably want to set default level to warn instead -->
         <appender-ref ref="consoleAppender"/>
     </root>

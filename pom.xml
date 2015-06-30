@@ -16,8 +16,8 @@
         <groupId>org.jboss.bom.brms</groupId>
         <artifactId>jboss-brms-bpmsuite-bom</artifactId>
         <type>pom</type>
-<!--         <version>6.1.1.GA-redhat-2</version> -->
-             <version>6.1.0.GA-redhat-2</version>
+        <!-- <version>6.1.1.GA-redhat-2</version> -->
+        <version>6.1.0.GA-redhat-2</version>
         <scope>import</scope>
       </dependency>
     </dependencies>
@@ -61,6 +61,11 @@
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-compiler</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+  <version>1.0.9</version>
     </dependency>
 
     <dependency>

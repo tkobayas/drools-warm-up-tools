@@ -17,8 +17,12 @@ import org.kie.api.KieBase;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
 import org.kie.internal.concurrent.ExecutorProviderFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MvelConstraintOptimizer {
+    
+    private static final Logger logger = LoggerFactory.getLogger(MvelConstraintOptimizer.class);
 
     private KieBase kbase;
 
@@ -33,20 +37,20 @@ public class MvelConstraintOptimizer {
 
     public void analyze(KieBase kbase, boolean dump) {
 
-        System.out.println("--- analyze started");
+        logger.info("--- analyze started");
         long start = System.currentTimeMillis();
 
         this.kbase = kbase;
         collector = new MvelConstraintCollector(dump);
         collector.traverseRete(kbase);
 
-        System.out.println("--- analyze finished : elapsed time = " + (System.currentTimeMillis() - start) + "ms");
+        logger.info("--- analyze finished : elapsed time = " + (System.currentTimeMillis() - start) + "ms");
     }
 
     public void optimizeAlphaNodeConstraints() throws InstantiationException, IllegalAccessException {
 
         // direct Jitting Mvelconstraints of AlphaNode
-        System.out.println("--- optimizeAlphaNodeConstraints started");
+        logger.info("--- optimizeAlphaNodeConstraints started");
         long start = System.currentTimeMillis();
 
         KieSession ksession = kbase.newKieSession();
@@ -67,19 +71,19 @@ public class MvelConstraintOptimizer {
                 conditionEvaluator.evaluate(handle, (InternalWorkingMemory) ksession, null);
                 MvelConstraintUtils.executeJitting(mvelConstraint, handle, (InternalWorkingMemory) ksession, null);
             } catch (Exception e) {
-                System.out.println(e);
+                logger.info(e.getMessage(), e);
             }
         }
 
         printJitStats(mvelConstraintSet);
 
-        System.out.println("--- optimizeAlphaNodeConstraints finished : elapsed time = "
+        logger.info("--- optimizeAlphaNodeConstraints finished : elapsed time = "
                 + (System.currentTimeMillis() - start) + "ms");
     }
 
     public void warmUpWithFacts(Object[] facts, Map<String, Object> globalMap) {
         // Warm-up with ksession.insert()
-        System.out.println("--- warmUpWithFacts ksession-run started");
+        logger.info("--- warmUpWithFacts ksession-run started");
         long start = System.currentTimeMillis();
 
         KieSession ksession = kbase.newKieSession();
@@ -100,11 +104,11 @@ public class MvelConstraintOptimizer {
             }
         }
         ksession.dispose();
-        System.out.println("--- warmUpWithFacts ksession-run finished : elapsed time = "
+        logger.info("--- warmUpWithFacts ksession-run finished : elapsed time = "
                 + (System.currentTimeMillis() - start) + "ms");
 
         // Wait for jit threads
-        System.out.println("--- warmUpWithFacts jit-waiting started");
+        logger.info("--- warmUpWithFacts jit-waiting started");
         long start2 = System.currentTimeMillis();
         long timeout = 5000;
         try {
@@ -112,7 +116,7 @@ public class MvelConstraintOptimizer {
             ThreadPoolExecutor executor = (ThreadPoolExecutor)ExecutorProviderFactory.getExecutorProvider().getExecutor();
             
             while (true) {
-                System.out.println(executor.getActiveCount() + ", " + executor.getTaskCount() + ", " + executor.getCompletedTaskCount());
+                logger.debug("activeCount = " + executor.getActiveCount() + ", taskCount = " + executor.getTaskCount() + ", completedTaskCount = " + executor.getCompletedTaskCount());
                 if (executor.getTaskCount() == executor.getCompletedTaskCount() || (System.currentTimeMillis() - start2) > timeout) {
                     break;
                 }
@@ -124,7 +128,7 @@ public class MvelConstraintOptimizer {
 
         printJitStats(collector.getMvelConstraintSet());
         
-        System.out.println("--- warmUpWithFacts jit-waiting finished : elapsed time = "
+        logger.info("--- warmUpWithFacts jit-waiting finished : elapsed time = "
                 + (System.currentTimeMillis() - start2) + "ms");
     }
 
@@ -136,7 +140,7 @@ public class MvelConstraintOptimizer {
                 jitted++;
             }
         }
-        System.out.println(jitted + " constrains are jitted out of " + total);
+        logger.info(jitted + " constrains are jitted out of " + total);
     }
 
     public void dumpMvelConstraint() {
@@ -144,26 +148,26 @@ public class MvelConstraintOptimizer {
     }
     
     public void reviewUnjittedMvelConstraint() {
-        System.out.println("--- reviewUnjittedMvelConstraint ---");
+        logger.info("--- reviewUnjittedMvelConstraint ---");
         Map<MvelConstraint, MvelConstraintInfo> mvelConstraintInfoMap = collector.getMvelConstraintInfoMap();
         for (MvelConstraint mvelConstraint : mvelConstraintInfoMap.keySet()) {
             if (MvelConstraintUtils.isJitDone(mvelConstraint)) {
                 continue;
             }
             MvelConstraintInfo info = mvelConstraintInfoMap.get(mvelConstraint);
-            System.out.println(mvelConstraint);
-//            System.out.println("    ObjectTypeNode = " + info.getOtn());
-//            System.out.println("    parent = " + info.getParent());
-            System.out.println("    parentNodeConstraints");
+            logger.info(mvelConstraint.toString());
+//            logger.info("    ObjectTypeNode = " + info.getOtn());
+//            logger.info("    parent = " + info.getParent());
+            logger.info("    parentNodeConstraints");
             Set<MvelConstraint> parentNodeConstraints = info.getParentNodeConstraints();
             for (MvelConstraint parentNodeConstraint : parentNodeConstraints) {
 //                if (MvelConstraintUtils.isJitDone(parentNodeConstraint)) {
 //                    continue;
 //                }
-                System.out.println("        -> " + parentNodeConstraint);
+                logger.info("        -> " + parentNodeConstraint);
             }
         }
-        System.out.println("-----------------------------------");
+        logger.info("-----------------------------------");
 
     }
 }

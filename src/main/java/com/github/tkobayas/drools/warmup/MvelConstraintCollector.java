@@ -27,8 +27,12 @@ import org.drools.core.rule.constraint.MvelConstraint;
 import org.drools.core.spi.BetaNodeFieldConstraint;
 import org.drools.core.spi.Constraint;
 import org.kie.api.KieBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MvelConstraintCollector {
+    
+    private static final Logger logger = LoggerFactory.getLogger(MvelConstraintCollector.class);
 
     private boolean dump = false;
     
@@ -53,10 +57,9 @@ public class MvelConstraintCollector {
             boolean jitDone = MvelConstraintUtils.isJitDone(mvelConstraint);
             int invocationCounter = MvelConstraintUtils.getInvocationCounter(mvelConstraint);
             String status = jitDone ? "jit" : "mvel";
-            System.out.println("[" + Integer.toHexString(mvelConstraint.hashCode()) + ":" + invocationCounter + ":" + status + "] " + mvelConstraint);
+            logger.info("[" + Integer.toHexString(mvelConstraint.hashCode()) + ":" + invocationCounter + ":" + status + "] " + mvelConstraint);
         }
-        System.out.println();
-        System.out.println("--- mvelConstraintSet.size() = " + mvelConstraintSet.size());
+        logger.info("--- mvelConstraintSet.size() = " + mvelConstraintSet.size());
     }
 
 
@@ -104,7 +107,7 @@ public class MvelConstraintCollector {
         }
 
         if (dump) {
-            System.out.println(indent + node + (additionalInfo.isEmpty() ? "" : " ---> " + additionalInfo));
+            logger.info(indent + node + (additionalInfo.isEmpty() ? "" : " ---> " + additionalInfo));
         }
 
         Sink[] sinks = null;
