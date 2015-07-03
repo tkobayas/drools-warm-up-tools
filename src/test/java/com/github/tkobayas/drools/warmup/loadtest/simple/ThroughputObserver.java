@@ -1,6 +1,8 @@
-package com.github.tkobayas.drools.warmup.loadtest;
+package com.github.tkobayas.drools.warmup.loadtest.simple;
 
 import java.util.concurrent.CountDownLatch;
+
+import com.github.tkobayas.drools.warmup.loadtest.join.JoinMultiThreadTestBase;
 
 public class ThroughputObserver implements Runnable {
     
@@ -30,7 +32,7 @@ public class ThroughputObserver implements Runnable {
                 e.printStackTrace();
             }
             long currentTime = System.currentTimeMillis();
-            long currentNum = MultiThreadTest.resultNum.get();
+            long currentNum = MultiThreadTestBase.resultNum.get();
             
             if ((currentNum - lastNum) == 0) {
                 break;

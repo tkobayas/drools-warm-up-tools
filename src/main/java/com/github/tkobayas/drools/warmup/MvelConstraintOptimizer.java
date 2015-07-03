@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MvelConstraintOptimizer {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(MvelConstraintOptimizer.class);
 
     private KieBase kbase;
@@ -30,7 +30,7 @@ public class MvelConstraintOptimizer {
 
     public MvelConstraintOptimizer() {
     }
-    
+
     public void analyze(KieBase kbase) {
         analyze(kbase, false);
     }
@@ -48,6 +48,10 @@ public class MvelConstraintOptimizer {
     }
 
     public void optimizeAlphaNodeConstraints() throws InstantiationException, IllegalAccessException {
+        optimizeAlphaNodeConstraints(true);
+    }
+    
+    public void optimizeAlphaNodeConstraints(boolean forceJVMJit) throws InstantiationException, IllegalAccessException {
 
         // direct Jitting Mvelconstraints of AlphaNode
         logger.info("--- optimizeAlphaNodeConstraints started");
@@ -70,6 +74,14 @@ public class MvelConstraintOptimizer {
             try {
                 conditionEvaluator.evaluate(handle, (InternalWorkingMemory) ksession, null);
                 MvelConstraintUtils.executeJitting(mvelConstraint, handle, (InternalWorkingMemory) ksession, null);
+                MvelConstraintUtils.setJitted(mvelConstraint);
+
+                if (forceJVMJit) {
+                    ConditionEvaluator jittedEvaluator = MvelConstraintUtils.getConditionEvaluator(mvelConstraint);
+                    for (int i = 0; i < 10000; i++) {
+                        jittedEvaluator.evaluate(handle, (InternalWorkingMemory) ksession, null);
+                    }
+                }
             } catch (Exception e) {
                 logger.info(e.getMessage(), e);
             }
@@ -112,12 +124,15 @@ public class MvelConstraintOptimizer {
         long start2 = System.currentTimeMillis();
         long timeout = 5000;
         try {
-            
-            ThreadPoolExecutor executor = (ThreadPoolExecutor)ExecutorProviderFactory.getExecutorProvider().getExecutor();
-            
+
+            ThreadPoolExecutor executor = (ThreadPoolExecutor) ExecutorProviderFactory.getExecutorProvider()
+                    .getExecutor();
+
             while (true) {
-                logger.debug("activeCount = " + executor.getActiveCount() + ", taskCount = " + executor.getTaskCount() + ", completedTaskCount = " + executor.getCompletedTaskCount());
-                if (executor.getTaskCount() == executor.getCompletedTaskCount() || (System.currentTimeMillis() - start2) > timeout) {
+                logger.debug("activeCount = " + executor.getActiveCount() + ", taskCount = " + executor.getTaskCount()
+                        + ", completedTaskCount = " + executor.getCompletedTaskCount());
+                if (executor.getTaskCount() == executor.getCompletedTaskCount()
+                        || (System.currentTimeMillis() - start2) > timeout) {
                     break;
                 }
                 Thread.sleep(500);
@@ -127,10 +142,28 @@ public class MvelConstraintOptimizer {
         }
 
         printJitStats(collector.getMvelConstraintSet());
-        
+
         logger.info("--- warmUpWithFacts jit-waiting finished : elapsed time = "
                 + (System.currentTimeMillis() - start2) + "ms");
     }
+
+    // public void forceJVMJit() {
+    // logger.info("--- forceJVMJit");
+    // long start = System.currentTimeMillis();
+    //
+    // for (MvelConstraint mvelConstraint : collector.getMvelConstraintSet()) {
+    // if (MvelConstraintUtils.isJitDone(mvelConstraint)) {
+    // ConditionEvaluator conditionEvaluator =
+    // MvelConstraintUtils.getConditionEvaluator(mvelConstraint);
+    // for (int i = 0; i < 10000; i++) {
+    // conditionEvaluator.evaluate(null, null, null);
+    // }
+    // }
+    // }
+    //
+    // logger.info("--- forceJVMJit finished : elapsed time = "
+    // + (System.currentTimeMillis() - start) + "ms");
+    // }
 
     private void printJitStats(Set<MvelConstraint> mvelConstraintSet) {
         int total = mvelConstraintSet.size();
@@ -146,7 +179,7 @@ public class MvelConstraintOptimizer {
     public void dumpMvelConstraint() {
         collector.dumpMvelConstraint();
     }
-    
+
     public void reviewUnjittedMvelConstraint() {
         logger.info("--- reviewUnjittedMvelConstraint ---");
         Map<MvelConstraint, MvelConstraintInfo> mvelConstraintInfoMap = collector.getMvelConstraintInfoMap();
@@ -156,14 +189,14 @@ public class MvelConstraintOptimizer {
             }
             MvelConstraintInfo info = mvelConstraintInfoMap.get(mvelConstraint);
             logger.info(mvelConstraint.toString());
-//            logger.info("    ObjectTypeNode = " + info.getOtn());
-//            logger.info("    parent = " + info.getParent());
+            // logger.info("    ObjectTypeNode = " + info.getOtn());
+            // logger.info("    parent = " + info.getParent());
             logger.info("    parentNodeConstraints");
             Set<MvelConstraint> parentNodeConstraints = info.getParentNodeConstraints();
             for (MvelConstraint parentNodeConstraint : parentNodeConstraints) {
-//                if (MvelConstraintUtils.isJitDone(parentNodeConstraint)) {
-//                    continue;
-//                }
+                // if (MvelConstraintUtils.isJitDone(parentNodeConstraint)) {
+                // continue;
+                // }
                 logger.info("        -> " + parentNodeConstraint);
             }
         }

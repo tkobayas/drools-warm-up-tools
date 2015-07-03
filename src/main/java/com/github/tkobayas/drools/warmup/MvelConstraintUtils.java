@@ -29,6 +29,16 @@ public class MvelConstraintUtils {
         }
     }
     
+    public static void setJitted(MvelConstraint mvelConstraint) {
+        try {
+            Field field = MvelConstraint.class.getDeclaredField("jitted");
+            field.setAccessible(true);
+            field.setBoolean(mvelConstraint, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public static ConditionEvaluator getConditionEvaluator(MvelConstraint mvelConstraint) {
         ConditionEvaluator conditionEvaluator = null;
         try {

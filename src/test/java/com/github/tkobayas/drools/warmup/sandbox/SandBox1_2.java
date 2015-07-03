@@ -44,6 +44,7 @@ public class SandBox1_2 {
             MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
             optimizer.analyze(kbase, true);
             optimizer.optimizeAlphaNodeConstraints();
+//            optimizer.forceJVMJit();
 //            optimizer.dumpMvelConstraint();
             optimizer.reviewUnjittedMvelConstraint();
 

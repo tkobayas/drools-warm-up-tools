@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
-public class RuleGen {
+/**
+ * Generate simple rules which have AlphaNode + constraints
+ */
+public class SimpleRuleGen {
 
     public static void main(String[] args) throws Exception {
         
@@ -14,19 +17,19 @@ public class RuleGen {
         builder.append("import com.sample.*\n\n");
         builder.append("global java.util.List resultList;\n\n");
         
-        for (int i = 0; i < 5000; i++) {
+        int ruleNum = 2000;
+        
+        for (int i = 0; i < ruleNum; i++) {
             builder.append("rule \"rule" + i + "\"\n");
             builder.append("  when\n");
             builder.append("    $p : Person( age >= " + i*5 + " && age < " + (i+1)*5 + " )\n");
-            builder.append("    $e : Employee( age >= $p.age + " + i + ")\n");
             builder.append("  then\n");
-            builder.append("    //System.out.println( kcontext.getRule().getName() + \" : \" + $p );\n");
             builder.append("    resultList.add( kcontext.getRule().getName() + \" : \" + $p );\n");
             builder.append("end\n");
             builder.append("\n");
         }
         
-        PrintWriter pr = new PrintWriter(new FileWriter(new File("Sample4.drl")));
+        PrintWriter pr = new PrintWriter(new FileWriter(new File("LoadTest_" + ruleNum + "rules.drl")));
         pr.write(builder.toString());
         pr.close();
         
