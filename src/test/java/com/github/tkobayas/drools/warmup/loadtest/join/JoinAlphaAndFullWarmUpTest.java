@@ -37,10 +37,11 @@ public class JoinAlphaAndFullWarmUpTest extends JoinMultiThreadTestBase {
         optimizer.analyze(kBase);
         optimizer.optimizeAlphaNodeConstraints();
         
-        Object[] facts = new Object[JoinMultiThreadTestBase.RULE_NUM];
+        Object[] facts = new Object[JoinMultiThreadTestBase.RULE_NUM + 1];
         for (int i = 0; i < JoinMultiThreadTestBase.RULE_NUM; i++) {
             facts[i] = new Person("John" + i, i * 5);
         }
+        facts[JoinMultiThreadTestBase.RULE_NUM] = new Employee("Paul", JoinMultiThreadTestBase.RULE_NUM * 5 + JoinMultiThreadTestBase.RULE_NUM);
         HashMap<String, Object> globalMap = new HashMap<String, Object>();
         globalMap.put("resultList", new ArrayList<String>());
         optimizer.warmUpWithFacts(facts, globalMap);

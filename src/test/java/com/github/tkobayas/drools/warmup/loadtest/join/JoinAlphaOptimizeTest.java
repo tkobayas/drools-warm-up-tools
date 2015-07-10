@@ -37,6 +37,7 @@ public class JoinAlphaOptimizeTest extends JoinMultiThreadTestBase {
         //------------------------------------
         MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
         optimizer.analyze(kBase);
+//        optimizer.optimizeAlphaNodeConstraints(false);
         optimizer.optimizeAlphaNodeConstraints();
         //------------------------------------
         

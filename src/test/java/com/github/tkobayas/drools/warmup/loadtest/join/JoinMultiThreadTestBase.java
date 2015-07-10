@@ -20,7 +20,7 @@ import com.sample.Person;
 
 public class JoinMultiThreadTestBase {
     
-    public static final int RULE_NUM = 1000;
+    public static final int RULE_NUM = 500;
 //    private static final String DRL_FILE_NAME = "LoadTest_" + RULE_NUM + "rules.drl";
     private static final String DRL_FILE_NAME = "LoadTest_Join_" + RULE_NUM + "rules.drl";
 

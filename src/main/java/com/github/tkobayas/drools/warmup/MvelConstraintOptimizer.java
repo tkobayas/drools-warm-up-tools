@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.drools.core.base.ClassObjectType;
@@ -24,11 +23,18 @@ public class MvelConstraintOptimizer {
 
     private static final Logger logger = LoggerFactory.getLogger(MvelConstraintOptimizer.class);
 
+    private static final long DEFAULT_COMPILE_THRESHOLD = 10000; // -XX:CompileThreshold
+
+    private long compileThreshold = DEFAULT_COMPILE_THRESHOLD;
+
+    private static final int WARMUP_LOOP_NUM = 20;
+
     private KieBase kbase;
 
     private MvelConstraintCollector collector;
 
     public MvelConstraintOptimizer() {
+        compileThreshold = Long.parseLong(System.getProperty("drools.warmup.compileThreshold", String.valueOf(DEFAULT_COMPILE_THRESHOLD)));
     }
 
     public void analyze(KieBase kbase) {
@@ -54,7 +60,7 @@ public class MvelConstraintOptimizer {
     public void optimizeAlphaNodeConstraints(boolean forceJVMJit) throws InstantiationException, IllegalAccessException {
 
         // direct Jitting Mvelconstraints of AlphaNode
-        logger.info("--- optimizeAlphaNodeConstraints started");
+        logger.info("--- optimizeAlphaNodeConstraints started : forceJVMJit = " + forceJVMJit);
         long start = System.currentTimeMillis();
 
         KieSession ksession = kbase.newKieSession();
@@ -78,7 +84,7 @@ public class MvelConstraintOptimizer {
 
                 if (forceJVMJit) {
                     ConditionEvaluator jittedEvaluator = MvelConstraintUtils.getConditionEvaluator(mvelConstraint);
-                    for (int i = 0; i < 10000; i++) {
+                    for (int i = 0; i < compileThreshold; i++) {
                         jittedEvaluator.evaluate(handle, (InternalWorkingMemory) ksession, null);
                     }
                 }
@@ -104,7 +110,7 @@ public class MvelConstraintOptimizer {
                 ksession.setGlobal(key, globalMap.get(key));
             }
         }
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < WARMUP_LOOP_NUM; i++) {
             List<FactHandle> handleList = new ArrayList<FactHandle>();
             for (Object fact : facts) {
                 FactHandle handle = ksession.insert(fact);
@@ -146,24 +152,6 @@ public class MvelConstraintOptimizer {
         logger.info("--- warmUpWithFacts jit-waiting finished : elapsed time = "
                 + (System.currentTimeMillis() - start2) + "ms");
     }
-
-    // public void forceJVMJit() {
-    // logger.info("--- forceJVMJit");
-    // long start = System.currentTimeMillis();
-    //
-    // for (MvelConstraint mvelConstraint : collector.getMvelConstraintSet()) {
-    // if (MvelConstraintUtils.isJitDone(mvelConstraint)) {
-    // ConditionEvaluator conditionEvaluator =
-    // MvelConstraintUtils.getConditionEvaluator(mvelConstraint);
-    // for (int i = 0; i < 10000; i++) {
-    // conditionEvaluator.evaluate(null, null, null);
-    // }
-    // }
-    // }
-    //
-    // logger.info("--- forceJVMJit finished : elapsed time = "
-    // + (System.currentTimeMillis() - start) + "ms");
-    // }
 
     private void printJitStats(Set<MvelConstraint> mvelConstraintSet) {
         int total = mvelConstraintSet.size();

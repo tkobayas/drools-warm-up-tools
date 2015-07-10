@@ -17,7 +17,7 @@ public class JoinNodeRuleGen {
         builder.append("import com.sample.*\n\n");
         builder.append("global java.util.List resultList;\n\n");
         
-        int ruleNum = 1000;
+        int ruleNum = 500;
         
         for (int i = 0; i < ruleNum; i++) {
             builder.append("rule \"rule" + i + "\"\n");

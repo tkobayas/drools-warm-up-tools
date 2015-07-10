@@ -36,10 +36,12 @@ public class JoinFullWarmUpTest extends JoinMultiThreadTestBase {
         MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
         optimizer.analyze(kBase);
 
-        Object[] facts = new Object[JoinMultiThreadTestBase.RULE_NUM];
+        Object[] facts = new Object[JoinMultiThreadTestBase.RULE_NUM + 1];
         for (int i = 0; i < JoinMultiThreadTestBase.RULE_NUM; i++) {
             facts[i] = new Person("John" + i, i * 5);
         }
+//        facts[JoinMultiThreadTestBase.RULE_NUM] = new Employee("Paul", 0); // This evaluates all constrains but not fire the rules
+        facts[JoinMultiThreadTestBase.RULE_NUM] = new Employee("Paul", JoinMultiThreadTestBase.RULE_NUM * 5 + JoinMultiThreadTestBase.RULE_NUM); // This evaluates all constrains and fire all the rules 
         HashMap<String, Object> globalMap = new HashMap<String, Object>();
         globalMap.put("resultList", new ArrayList<String>());
         optimizer.warmUpWithFacts(facts, globalMap);
