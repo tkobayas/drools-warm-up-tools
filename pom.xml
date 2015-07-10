@@ -12,12 +12,21 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- for BRMS 6.1.0 -->
+      <!-- <dependency> -->
+      <!-- <groupId>org.jboss.bom.brms</groupId> -->
+      <!-- <artifactId>jboss-brms-bpmsuite-bom</artifactId> -->
+      <!-- <type>pom</type> -->
+      <!-- <version>6.1.0.GA-redhat-2</version> -->
+      <!-- <scope>import</scope> -->
+      <!-- </dependency> -->
+
+      <!-- for Drools 6.2.0 -->
       <dependency>
-        <groupId>org.jboss.bom.brms</groupId>
-        <artifactId>jboss-brms-bpmsuite-bom</artifactId>
+        <groupId>org.drools</groupId>
+        <artifactId>drools-bom</artifactId>
         <type>pom</type>
-        <!-- <version>6.1.1.GA-redhat-2</version> -->
-        <version>6.1.0.GA-redhat-2</version>
+        <version>6.2.0.Final</version>
         <scope>import</scope>
       </dependency>
     </dependencies>
@@ -84,8 +93,9 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.9</version>
           <configuration>
-            <argLine>-Xmx4G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled</argLine>
-<!--             <argLine>-Xmx4G</argLine> -->
+            <argLine>-Xmx4G -XX:+UseConcMarkSweepGC
+              -XX:+CMSClassUnloadingEnabled</argLine>
+            <!-- <argLine>-Xmx4G</argLine> -->
           </configuration>
         </plugin>
       </plugins>
