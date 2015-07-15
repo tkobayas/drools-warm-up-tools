@@ -11,6 +11,13 @@ import org.drools.core.rule.constraint.ConditionEvaluator;
 import org.drools.core.rule.constraint.MvelConditionEvaluator;
 import org.drools.core.rule.constraint.MvelConstraint;
 
+/**
+ * 
+ * Utility class including static methods which tweak MvelConstraint private members.
+ * 
+ * You would need to take care of security policy if enabled.
+ *
+ */
 public class MvelConstraintUtils {
 
     public static boolean isJitDone(MvelConstraint mvelConstraint) {
@@ -73,7 +80,7 @@ public class MvelConstraintUtils {
             e.printStackTrace();
         }
     }
-    
+
     public static void executeJitting(MvelConstraint mvelConstraint, InternalFactHandle handle, InternalWorkingMemory workingMemory, LeftTuple leftTuple) {
         try {
             Method method = MvelConstraint.class.getDeclaredMethod("executeJitting", InternalFactHandle.class, InternalWorkingMemory.class, LeftTuple.class);

@@ -19,6 +19,27 @@ import org.kie.internal.concurrent.ExecutorProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * Optimizes kbase by warm-up.
+ *
+ * <p>
+ * <h3>Usage example:</h3>
+ * <p/>
+ * <pre>
+ * {@code
+ * MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
+ * optimizer.analyze(kBase); // Analyze kbase first. Mandatory
+ * optimizer.optimizeAlphaNodeConstraints(); // Optimizes MvelConstaraints
+ * Object[] facts = new Object[MultiThreadTestBase.RULE_NUM]; // Set up facts to fire all rules as possible
+ *   for (int i = 0; i < MultiThreadTestBase.RULE_NUM; i++) {
+ *   facts[i] = new Person("John" + i, i * 5);
+ * }
+ * HashMap<String, Object> globalMap = new HashMap<String, Object>(); // Set up globals
+ * globalMap.put("resultList", new ArrayList<String>());
+ * optimizer.warmUpWithFacts(facts, globalMap); // Run warm-up 
+ * </pre>
+ */
 public class MvelConstraintOptimizer {
 
     private static final Logger logger = LoggerFactory.getLogger(MvelConstraintOptimizer.class);
@@ -41,6 +62,12 @@ public class MvelConstraintOptimizer {
         analyze(kbase, false);
     }
 
+    /**
+     * Traverse kbase and store Mvelconstaints in the kbase
+     * 
+     * @param kbase
+     * @param dump if true, dump Rete nodes
+     */
     public void analyze(KieBase kbase, boolean dump) {
 
         logger.info("--- analyze started");
@@ -57,6 +84,15 @@ public class MvelConstraintOptimizer {
         optimizeAlphaNodeConstraints(true);
     }
     
+    /**
+     * 
+     * Jit MvelConstaint which are associated with AlphaNode. Here "Jit" means that Drools generates a class for the constraint to be used instead of Mvel.
+     * If you set forceJVMJit = true, the generated class will be Jitted by JVM so got further faster.
+     * 
+     * @param forceJVMJit
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     public void optimizeAlphaNodeConstraints(boolean forceJVMJit) throws InstantiationException, IllegalAccessException {
 
         // direct Jitting Mvelconstraints of AlphaNode
@@ -99,7 +135,27 @@ public class MvelConstraintOptimizer {
                 + (System.currentTimeMillis() - start) + "ms");
     }
 
+    /**
+     * Warm up kbase by ksession.insert/fireAllRules. You need to prepare facts to insert beforehand.
+     * Warm-up efficiency would depend on how many constraints are evaluated and how many rules are fired.
+     * 
+     * @param facts
+     * @param globalMap
+     */
     public void warmUpWithFacts(Object[] facts, Map<String, Object> globalMap) {
+        warmUpWithFacts(facts, globalMap, WARMUP_LOOP_NUM);
+    }
+    
+    /**
+     * Warm up kbase by ksession.insert/fireAllRules. You need to prepare facts to insert beforehand.
+     * Warm-up efficiency would depend on how many constraints are evaluated and how many rules are fired.
+     * The default number of loop is 20 because MvelConstarint.JIT_THRESOLD = 20.
+     * 
+     * @param facts
+     * @param globalMap
+     * @param warmupLoopNum
+     */
+    public void warmUpWithFacts(Object[] facts, Map<String, Object> globalMap, int warmupLoopNum) {
         // Warm-up with ksession.insert()
         logger.info("--- warmUpWithFacts ksession-run started");
         long start = System.currentTimeMillis();
@@ -168,6 +224,9 @@ public class MvelConstraintOptimizer {
         collector.dumpMvelConstraint();
     }
 
+    /**
+     * Logs constraints which are not Jitted.
+     */
     public void reviewUnjittedMvelConstraint() {
         logger.info("--- reviewUnjittedMvelConstraint ---");
         Map<MvelConstraint, MvelConstraintInfo> mvelConstraintInfoMap = collector.getMvelConstraintInfoMap();

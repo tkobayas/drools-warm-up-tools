@@ -1,28 +1,22 @@
 package com.github.tkobayas.drools.warmup;
 
-import java.lang.reflect.Field;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.drools.core.common.BaseNode;
 import org.drools.core.impl.KnowledgeBaseImpl;
 import org.drools.core.reteoo.AlphaNode;
 import org.drools.core.reteoo.BetaNode;
 import org.drools.core.reteoo.EntryPointNode;
-import org.drools.core.reteoo.JoinNode;
 import org.drools.core.reteoo.LeftTupleSource;
 import org.drools.core.reteoo.ObjectSource;
 import org.drools.core.reteoo.ObjectTypeNode;
 import org.drools.core.reteoo.Rete;
 import org.drools.core.reteoo.Sink;
-import org.drools.core.rule.constraint.ConditionEvaluator;
-import org.drools.core.rule.constraint.MvelConditionEvaluator;
 import org.drools.core.rule.constraint.MvelConstraint;
 import org.drools.core.spi.BetaNodeFieldConstraint;
 import org.drools.core.spi.Constraint;
@@ -30,6 +24,13 @@ import org.kie.api.KieBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * Traverse Rete and extract MvelConstraint in kbase. Generally, used by MvelconstaintOptimizer.
+ * 
+ * @see com.github.tkobayas.drools.warmup.MvelconstaintOptimizer
+ *
+ */
 public class MvelConstraintCollector {
     
     private static final Logger logger = LoggerFactory.getLogger(MvelConstraintCollector.class);
