@@ -1,4 +1,4 @@
-package com.github.tkobayas.drools.warmup.loadtest.simple;
+package com.github.tkobayas.drools.warmup.loadtest.join;
 
 import static org.junit.Assert.assertTrue;
 
@@ -25,7 +25,7 @@ import com.sample.Person;
 /**
  * This is a sample class to launch a rule.
  */
-public class SimpleWarmUpTest extends MultiThreadTestBase {
+public class JoinFullWarmUp20Test extends JoinMultiThreadTestBase {
     
     @Test
     public void testRule() throws Exception {
@@ -35,11 +35,16 @@ public class SimpleWarmUpTest extends MultiThreadTestBase {
         //------------------------------------
         WarmUpHelper helper = new WarmUpHelper();
         helper.analyze(kBase);
-        Person p = new Person("John", Integer.MAX_VALUE);
-        Object[] facts = new Object[]{p};
+
+        Object[] facts = new Object[JoinMultiThreadTestBase.RULE_NUM + 1];
+        for (int i = 0; i < JoinMultiThreadTestBase.RULE_NUM; i++) {
+            facts[i] = new Person("John" + i, i * 5);
+        }
+//        facts[JoinMultiThreadTestBase.RULE_NUM] = new Employee("Paul", 0); // This evaluates all constrains but not fire the rules
+        facts[JoinMultiThreadTestBase.RULE_NUM] = new Employee("Paul", JoinMultiThreadTestBase.RULE_NUM * 5 + JoinMultiThreadTestBase.RULE_NUM); // This evaluates all constrains and fire all the rules 
         HashMap<String, Object> globalMap = new HashMap<String, Object>();
         globalMap.put("resultList", new ArrayList<String>());
-        helper.warmUpWithFacts(facts, globalMap);
+        helper.warmUpWithFacts(facts, globalMap, 20);
         //------------------------------------
         
         runTest(kBase);

@@ -18,14 +18,14 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
 
-import com.github.tkobayas.drools.warmup.MvelConstraintOptimizer;
+import com.github.tkobayas.drools.warmup.WarmUpHelper;
 import com.sample.Employee;
 import com.sample.Person;
 
 /**
  * This is a sample class to launch a rule.
  */
-public class JoinFullWarmUpTest extends JoinMultiThreadTestBase {
+public class JoinFullWarmUp100Test extends JoinMultiThreadTestBase {
     
     @Test
     public void testRule() throws Exception {
@@ -33,8 +33,8 @@ public class JoinFullWarmUpTest extends JoinMultiThreadTestBase {
         final KieBase kBase = setupKieBase();
         
         //------------------------------------
-        MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
-        optimizer.analyze(kBase);
+        WarmUpHelper helper = new WarmUpHelper();
+        helper.analyze(kBase);
 
         Object[] facts = new Object[JoinMultiThreadTestBase.RULE_NUM + 1];
         for (int i = 0; i < JoinMultiThreadTestBase.RULE_NUM; i++) {
@@ -44,7 +44,7 @@ public class JoinFullWarmUpTest extends JoinMultiThreadTestBase {
         facts[JoinMultiThreadTestBase.RULE_NUM] = new Employee("Paul", JoinMultiThreadTestBase.RULE_NUM * 5 + JoinMultiThreadTestBase.RULE_NUM); // This evaluates all constrains and fire all the rules 
         HashMap<String, Object> globalMap = new HashMap<String, Object>();
         globalMap.put("resultList", new ArrayList<String>());
-        optimizer.warmUpWithFacts(facts, globalMap);
+        helper.warmUpWithFacts(facts, globalMap, 20);
         //------------------------------------
         
         runTest(kBase);

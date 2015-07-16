@@ -20,7 +20,7 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.builder.conf.RuleEngineOption;
 
-import com.github.tkobayas.drools.warmup.MvelConstraintCollector;
+import com.github.tkobayas.drools.warmup.KieBaseAnalyzer;
 import com.sample.Employee;
 import com.sample.Person;
 
@@ -43,8 +43,8 @@ public class SandBox2_1 {
 
             List<Object> factList = new ArrayList<Object>();
 
-            MvelConstraintCollector collector = new MvelConstraintCollector();
-            collector.traverseRete(kbase);
+            KieBaseAnalyzer analyzer = new KieBaseAnalyzer();
+            analyzer.traverseRete(kbase);
             
             System.out.println();
 
@@ -61,7 +61,7 @@ public class SandBox2_1 {
             int fired = kSession.fireAllRules();
             System.out.println("fired = " + fired);
             
-            collector.dumpMvelConstraint();
+            analyzer.dumpMvelConstraint();
 
 
         } catch (Throwable t) {

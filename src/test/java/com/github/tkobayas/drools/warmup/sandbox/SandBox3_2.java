@@ -8,7 +8,7 @@ import org.kie.api.KieServices;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.runtime.KieContainer;
 
-import com.github.tkobayas.drools.warmup.MvelConstraintOptimizer;
+import com.github.tkobayas.drools.warmup.WarmUpHelper;
 import com.sample.Employee;
 import com.sample.Person;
 
@@ -29,17 +29,17 @@ public class SandBox3_2 {
             KieContainer kContainer = ks.newKieContainer(ks.getRepository().getDefaultReleaseId());
             KieBase kbase = kContainer.getKieBase();
             
-            MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
-            optimizer.analyze(kbase, false);
+            WarmUpHelper helper = new WarmUpHelper();
+            helper.analyze(kbase, false);
             
             Person p = new Person("John", 10000);
             Employee e = new Employee("Paul", 100);
             Object[] facts = new Object[]{p, e};
             HashMap<String, Object> globalMap = new HashMap<String, Object>();
             globalMap.put("resultList", new ArrayList<String>());
-            optimizer.warmUpWithFacts(facts, globalMap);
+            helper.warmUpWithFacts(facts, globalMap);
             
-            //optimizer.dumpMvelConstraint();
+            //helper.dumpMvelConstraint();
 
         } catch (Throwable t) {
             t.printStackTrace();

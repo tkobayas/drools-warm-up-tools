@@ -5,7 +5,7 @@ import org.kie.api.KieServices;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.runtime.KieContainer;
 
-import com.github.tkobayas.drools.warmup.MvelConstraintOptimizer;
+import com.github.tkobayas.drools.warmup.WarmUpHelper;
 
 /**
  * Not JUnit TestCase at this moment
@@ -30,11 +30,11 @@ public class SandBox4_1 {
             System.out.println("--- kbase build finished : elapsed time = "
                     + (System.currentTimeMillis() - start) + "ms");
             
-            MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
-            optimizer.analyze(kbase);
+            WarmUpHelper helper = new WarmUpHelper();
+            helper.analyze(kbase);
             
-            optimizer.optimizeAlphaNodeConstraints();
-            //optimizer.dumpMvelConstraint();
+            helper.optimizeAlphaNodeConstraints();
+            //helper.dumpMvelConstraint();
 
         } catch (Throwable t) {
             t.printStackTrace();

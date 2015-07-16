@@ -20,7 +20,7 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.builder.conf.RuleEngineOption;
 
-import com.github.tkobayas.drools.warmup.MvelConstraintOptimizer;
+import com.github.tkobayas.drools.warmup.WarmUpHelper;
 import com.sample.Employee;
 import com.sample.Person;
 
@@ -41,12 +41,12 @@ public class SandBox1_2 {
             KieContainer kContainer = ks.newKieContainer(ks.getRepository().getDefaultReleaseId());
             KieBase kbase = kContainer.getKieBase();
             
-            MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
-            optimizer.analyze(kbase, true);
-            optimizer.optimizeAlphaNodeConstraints();
-//            optimizer.forceJVMJit();
-//            optimizer.dumpMvelConstraint();
-            optimizer.reviewUnjittedMvelConstraint();
+            WarmUpHelper helper = new WarmUpHelper();
+            helper.analyze(kbase, true);
+            helper.optimizeAlphaNodeConstraints();
+//            helper.forceJVMJit();
+//            helper.dumpMvelConstraint();
+            helper.reviewUnjittedMvelConstraint();
 
         } catch (Throwable t) {
             t.printStackTrace();

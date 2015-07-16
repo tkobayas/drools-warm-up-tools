@@ -21,7 +21,7 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.builder.conf.RuleEngineOption;
 
-import com.github.tkobayas.drools.warmup.MvelConstraintOptimizer;
+import com.github.tkobayas.drools.warmup.WarmUpHelper;
 import com.sample.Employee;
 import com.sample.Person;
 
@@ -42,8 +42,8 @@ public class SandBox1_4 {
             KieContainer kContainer = ks.newKieContainer(ks.getRepository().getDefaultReleaseId());
             KieBase kbase = kContainer.getKieBase();
             
-            MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
-            optimizer.analyze(kbase, true);
+            WarmUpHelper helper = new WarmUpHelper();
+            helper.analyze(kbase, true);
             
 //            Person p1 = new Person("John", 25);
 //            Person p2 = new Person("George", 22);
@@ -56,11 +56,11 @@ public class SandBox1_4 {
             Employee e2 = new Employee("Ringo", 100);
             
             Object[] facts = new Object[]{p1, p2, e1, e2};
-            optimizer.warmUpWithFacts(facts, null);
+            helper.warmUpWithFacts(facts, null);
             
-            optimizer.reviewUnjittedMvelConstraint();
+            helper.reviewUnjittedMvelConstraint();
             
-            optimizer.dumpMvelConstraint();
+            helper.dumpMvelConstraint();
 
         } catch (Throwable t) {
             t.printStackTrace();

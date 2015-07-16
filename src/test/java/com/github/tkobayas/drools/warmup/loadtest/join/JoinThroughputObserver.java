@@ -35,7 +35,7 @@ public class JoinThroughputObserver implements Runnable {
             long currentNum = JoinMultiThreadTestBase.resultNum.get();
             
             if ((currentNum - lastNum) == 0) {
-                System.out.println("zzz");
+                System.out.println("load test is not working?");
                 break;
             }
             

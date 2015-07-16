@@ -5,7 +5,7 @@ import org.kie.api.KieServices;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.runtime.KieContainer;
 
-import com.github.tkobayas.drools.warmup.MvelConstraintOptimizer;
+import com.github.tkobayas.drools.warmup.WarmUpHelper;
 
 /**
  * Not JUnit TestCase at this moment
@@ -24,10 +24,10 @@ public class SandBox3_1 {
             KieContainer kContainer = ks.newKieContainer(ks.getRepository().getDefaultReleaseId());
             KieBase kbase = kContainer.getKieBase();
             
-            MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
-            optimizer.analyze(kbase);
-            optimizer.optimizeAlphaNodeConstraints();
-            //optimizer.dumpMvelConstraint();
+            WarmUpHelper helper = new WarmUpHelper();
+            helper.analyze(kbase);
+            helper.optimizeAlphaNodeConstraints();
+            //helper.dumpMvelConstraint();
 
         } catch (Throwable t) {
             t.printStackTrace();

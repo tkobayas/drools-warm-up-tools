@@ -18,7 +18,7 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
 
-import com.github.tkobayas.drools.warmup.MvelConstraintOptimizer;
+import com.github.tkobayas.drools.warmup.WarmUpHelper;
 import com.sample.Employee;
 import com.sample.Person;
 
@@ -35,10 +35,9 @@ public class JoinAlphaOptimizeTest extends JoinMultiThreadTestBase {
         final KieBase kBase = setupKieBase();
         
         //------------------------------------
-        MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
-        optimizer.analyze(kBase);
-//        optimizer.optimizeAlphaNodeConstraints(false);
-        optimizer.optimizeAlphaNodeConstraints();
+        WarmUpHelper helper = new WarmUpHelper();
+        helper.analyze(kBase);
+        helper.optimizeAlphaNodeConstraints();
         //------------------------------------
         
         runTest(kBase);

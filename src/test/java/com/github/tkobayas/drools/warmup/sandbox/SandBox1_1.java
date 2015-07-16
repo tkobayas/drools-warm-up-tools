@@ -20,7 +20,7 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.builder.conf.RuleEngineOption;
 
-import com.github.tkobayas.drools.warmup.MvelConstraintCollector;
+import com.github.tkobayas.drools.warmup.KieBaseAnalyzer;
 import com.sample.Employee;
 import com.sample.Person;
 
@@ -41,8 +41,8 @@ public class SandBox1_1 {
             KieContainer kContainer = ks.newKieContainer(ks.getRepository().getDefaultReleaseId());
             KieBase kbase = kContainer.getKieBase();
             
-            MvelConstraintCollector collector = new MvelConstraintCollector(true);
-            collector.traverseRete(kbase);
+            KieBaseAnalyzer analyzer = new KieBaseAnalyzer(true);
+            analyzer.traverseRete(kbase);
             
             System.out.println();
 

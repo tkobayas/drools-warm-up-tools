@@ -19,7 +19,7 @@ import org.drools.core.spi.Constraint;
 
 /**
  * 
- * Wrapper class of MvelConstraint to hold associated information
+ * Wrapper class of MvelConstraint to hold associated information.
  *
  */
 public class MvelConstraintInfo {

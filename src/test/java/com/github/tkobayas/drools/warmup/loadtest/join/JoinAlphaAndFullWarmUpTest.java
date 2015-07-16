@@ -18,7 +18,7 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
 
-import com.github.tkobayas.drools.warmup.MvelConstraintOptimizer;
+import com.github.tkobayas.drools.warmup.WarmUpHelper;
 import com.sample.Employee;
 import com.sample.Person;
 
@@ -33,9 +33,9 @@ public class JoinAlphaAndFullWarmUpTest extends JoinMultiThreadTestBase {
         final KieBase kBase = setupKieBase();
         
         //------------------------------------
-        MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
-        optimizer.analyze(kBase);
-        optimizer.optimizeAlphaNodeConstraints();
+        WarmUpHelper helper = new WarmUpHelper();
+        helper.analyze(kBase);
+        helper.optimizeAlphaNodeConstraints();
         
         Object[] facts = new Object[JoinMultiThreadTestBase.RULE_NUM + 1];
         for (int i = 0; i < JoinMultiThreadTestBase.RULE_NUM; i++) {
@@ -44,7 +44,7 @@ public class JoinAlphaAndFullWarmUpTest extends JoinMultiThreadTestBase {
         facts[JoinMultiThreadTestBase.RULE_NUM] = new Employee("Paul", JoinMultiThreadTestBase.RULE_NUM * 5 + JoinMultiThreadTestBase.RULE_NUM);
         HashMap<String, Object> globalMap = new HashMap<String, Object>();
         globalMap.put("resultList", new ArrayList<String>());
-        optimizer.warmUpWithFacts(facts, globalMap);
+        helper.warmUpWithFacts(facts, globalMap, 1);
         //------------------------------------
         
         runTest(kBase);

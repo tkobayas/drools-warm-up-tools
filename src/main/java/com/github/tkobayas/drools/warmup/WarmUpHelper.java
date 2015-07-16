@@ -21,28 +21,34 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 
- * Optimizes kbase by warm-up.
+ * A helper class to optimize kbase by warm-up.
  *
  * <p>
  * <h3>Usage example:</h3>
  * <p/>
  * <pre>
  * {@code
- * MvelConstraintOptimizer optimizer = new MvelConstraintOptimizer();
- * optimizer.analyze(kBase); // Analyze kbase first. Mandatory
- * optimizer.optimizeAlphaNodeConstraints(); // Optimizes MvelConstaraints
- * Object[] facts = new Object[MultiThreadTestBase.RULE_NUM]; // Set up facts to fire all rules as possible
- *   for (int i = 0; i < MultiThreadTestBase.RULE_NUM; i++) {
- *   facts[i] = new Person("John" + i, i * 5);
+ * WarmUpHelper helper = new WarmUpHelper();
+ * 
+ * helper.analyze(kBase); // analyze your kbase first. Mandatory
+ * 
+ * helper.optimizeAlphaNodeConstraints(); // optimize constraints. Optional
+ * 
+ * Object[] facts = new Object[FACT_NUM];
+ * for (int i = 0; i < FACT_NUM; i++) {
+ *     facts[i] = new Person("John" + i, i * 5);
  * }
- * HashMap<String, Object> globalMap = new HashMap<String, Object>(); // Set up globals
+ * HashMap<String, Object> globalMap = new HashMap<String, Object>();
  * globalMap.put("resultList", new ArrayList<String>());
- * optimizer.warmUpWithFacts(facts, globalMap); // Run warm-up 
+ * helper.warmUpWithFacts(facts, globalMap); // warm up with prepared facts which fire (most of) all rules. Optional
+ * 
+ * helper.reviewUnjittedMvelConstraint() // Logs constraints which are not Jitted. So helpful to prepare your warm-up facts. Optional
+ * }
  * </pre>
  */
-public class MvelConstraintOptimizer {
+public class WarmUpHelper {
 
-    private static final Logger logger = LoggerFactory.getLogger(MvelConstraintOptimizer.class);
+    private static final Logger logger = LoggerFactory.getLogger(WarmUpHelper.class);
 
     private static final long DEFAULT_COMPILE_THRESHOLD = 10000; // -XX:CompileThreshold
 
@@ -52,9 +58,9 @@ public class MvelConstraintOptimizer {
 
     private KieBase kbase;
 
-    private MvelConstraintCollector collector;
+    private KieBaseAnalyzer analyzer;
 
-    public MvelConstraintOptimizer() {
+    public WarmUpHelper() {
         compileThreshold = Long.parseLong(System.getProperty("drools.warmup.compileThreshold", String.valueOf(DEFAULT_COMPILE_THRESHOLD)));
     }
 
@@ -74,8 +80,8 @@ public class MvelConstraintOptimizer {
         long start = System.currentTimeMillis();
 
         this.kbase = kbase;
-        collector = new MvelConstraintCollector(dump);
-        collector.traverseRete(kbase);
+        analyzer = new KieBaseAnalyzer(dump);
+        analyzer.traverseRete(kbase);
 
         logger.info("--- analyze finished : elapsed time = " + (System.currentTimeMillis() - start) + "ms");
     }
@@ -100,8 +106,8 @@ public class MvelConstraintOptimizer {
         long start = System.currentTimeMillis();
 
         KieSession ksession = kbase.newKieSession();
-        Set<MvelConstraint> mvelConstraintSet = collector.getMvelConstraintSet();
-        Map<MvelConstraint, MvelConstraintInfo> mvelConstraintInfoMap = collector.getMvelConstraintInfoMap();
+        Set<MvelConstraint> mvelConstraintSet = analyzer.getMvelConstraintSet();
+        Map<MvelConstraint, MvelConstraintInfo> mvelConstraintInfoMap = analyzer.getMvelConstraintInfoMap();
         int id = 0;
         for (MvelConstraint mvelConstraint : mvelConstraintSet) {
             MvelConstraintInfo mvelConstraintInfo = mvelConstraintInfoMap.get(mvelConstraint);
@@ -138,6 +144,7 @@ public class MvelConstraintOptimizer {
     /**
      * Warm up kbase by ksession.insert/fireAllRules. You need to prepare facts to insert beforehand.
      * Warm-up efficiency would depend on how many constraints are evaluated and how many rules are fired.
+     * The default number of loop is 20 to meet MvelConstarint.JIT_THRESOLD = 20.
      * 
      * @param facts
      * @param globalMap
@@ -149,7 +156,6 @@ public class MvelConstraintOptimizer {
     /**
      * Warm up kbase by ksession.insert/fireAllRules. You need to prepare facts to insert beforehand.
      * Warm-up efficiency would depend on how many constraints are evaluated and how many rules are fired.
-     * The default number of loop is 20 because MvelConstarint.JIT_THRESOLD = 20.
      * 
      * @param facts
      * @param globalMap
@@ -166,7 +172,7 @@ public class MvelConstraintOptimizer {
                 ksession.setGlobal(key, globalMap.get(key));
             }
         }
-        for (int i = 0; i < WARMUP_LOOP_NUM; i++) {
+        for (int i = 0; i < warmupLoopNum; i++) {
             List<FactHandle> handleList = new ArrayList<FactHandle>();
             for (Object fact : facts) {
                 FactHandle handle = ksession.insert(fact);
@@ -203,7 +209,7 @@ public class MvelConstraintOptimizer {
         } catch (InterruptedException e) {
         }
 
-        printJitStats(collector.getMvelConstraintSet());
+        printJitStats(analyzer.getMvelConstraintSet());
 
         logger.info("--- warmUpWithFacts jit-waiting finished : elapsed time = "
                 + (System.currentTimeMillis() - start2) + "ms");
@@ -221,7 +227,7 @@ public class MvelConstraintOptimizer {
     }
 
     public void dumpMvelConstraint() {
-        collector.dumpMvelConstraint();
+        analyzer.dumpMvelConstraint();
     }
 
     /**
@@ -229,7 +235,7 @@ public class MvelConstraintOptimizer {
      */
     public void reviewUnjittedMvelConstraint() {
         logger.info("--- reviewUnjittedMvelConstraint ---");
-        Map<MvelConstraint, MvelConstraintInfo> mvelConstraintInfoMap = collector.getMvelConstraintInfoMap();
+        Map<MvelConstraint, MvelConstraintInfo> mvelConstraintInfoMap = analyzer.getMvelConstraintInfoMap();
         for (MvelConstraint mvelConstraint : mvelConstraintInfoMap.keySet()) {
             if (MvelConstraintUtils.isJitDone(mvelConstraint)) {
                 continue;

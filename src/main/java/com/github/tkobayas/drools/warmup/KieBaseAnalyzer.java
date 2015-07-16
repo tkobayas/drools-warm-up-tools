@@ -26,14 +26,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 
- * Traverse Rete and extract MvelConstraint in kbase. Generally, used by MvelconstaintOptimizer.
+ * Traverse Rete and extract MvelConstraint in kbase. Generally, used by WarmUpHelper.
  * 
- * @see com.github.tkobayas.drools.warmup.MvelconstaintOptimizer
+ * @see com.github.tkobayas.drools.warmup.WarmUpHelper
  *
  */
-public class MvelConstraintCollector {
+public class KieBaseAnalyzer {
     
-    private static final Logger logger = LoggerFactory.getLogger(MvelConstraintCollector.class);
+    private static final Logger logger = LoggerFactory.getLogger(KieBaseAnalyzer.class);
 
     private boolean dump = false;
     
@@ -41,11 +41,11 @@ public class MvelConstraintCollector {
     
     private Map<MvelConstraint, MvelConstraintInfo> mvelConstraintInfoMap = new HashMap<MvelConstraint, MvelConstraintInfo>();
 
-    public MvelConstraintCollector() {
+    public KieBaseAnalyzer() {
         this.dump = false;
     }
 
-    public MvelConstraintCollector(boolean dump) {
+    public KieBaseAnalyzer(boolean dump) {
         this.dump = dump;
     }
 

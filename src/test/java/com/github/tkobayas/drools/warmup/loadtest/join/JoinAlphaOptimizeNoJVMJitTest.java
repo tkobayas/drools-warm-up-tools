@@ -1,4 +1,4 @@
-package com.github.tkobayas.drools.warmup.loadtest.simple;
+package com.github.tkobayas.drools.warmup.loadtest.join;
 
 import static org.junit.Assert.assertTrue;
 
@@ -25,21 +25,19 @@ import com.sample.Person;
 /**
  * This is a sample class to launch a rule.
  */
-public class SimpleWarmUpTest extends MultiThreadTestBase {
+public class JoinAlphaOptimizeNoJVMJitTest extends JoinMultiThreadTestBase {
     
     @Test
     public void testRule() throws Exception {
+        
+        //System.setProperty("drools.dump.dir", "/home/tkobayas/tmp");
 
         final KieBase kBase = setupKieBase();
         
         //------------------------------------
         WarmUpHelper helper = new WarmUpHelper();
         helper.analyze(kBase);
-        Person p = new Person("John", Integer.MAX_VALUE);
-        Object[] facts = new Object[]{p};
-        HashMap<String, Object> globalMap = new HashMap<String, Object>();
-        globalMap.put("resultList", new ArrayList<String>());
-        helper.warmUpWithFacts(facts, globalMap);
+        helper.optimizeAlphaNodeConstraints(false);
         //------------------------------------
         
         runTest(kBase);
