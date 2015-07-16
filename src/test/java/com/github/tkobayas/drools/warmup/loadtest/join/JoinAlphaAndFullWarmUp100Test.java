@@ -25,7 +25,7 @@ import com.sample.Person;
 /**
  * This is a sample class to launch a rule.
  */
-public class JoinAlphaAndFullWarmUpTest extends JoinMultiThreadTestBase {
+public class JoinAlphaAndFullWarmUp100Test extends JoinMultiThreadTestBase {
     
     @Test
     public void testRule() throws Exception {
@@ -44,7 +44,7 @@ public class JoinAlphaAndFullWarmUpTest extends JoinMultiThreadTestBase {
         facts[JoinMultiThreadTestBase.RULE_NUM] = new Employee("Paul", JoinMultiThreadTestBase.RULE_NUM * 5 + JoinMultiThreadTestBase.RULE_NUM);
         HashMap<String, Object> globalMap = new HashMap<String, Object>();
         globalMap.put("resultList", new ArrayList<String>());
-        helper.warmUpWithFacts(facts, globalMap, 1);
+        helper.warmUpWithFacts(facts, globalMap, 100);
         //------------------------------------
         
         runTest(kBase);

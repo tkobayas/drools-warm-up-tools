@@ -44,7 +44,7 @@ public class JoinFullWarmUp100Test extends JoinMultiThreadTestBase {
         facts[JoinMultiThreadTestBase.RULE_NUM] = new Employee("Paul", JoinMultiThreadTestBase.RULE_NUM * 5 + JoinMultiThreadTestBase.RULE_NUM); // This evaluates all constrains and fire all the rules 
         HashMap<String, Object> globalMap = new HashMap<String, Object>();
         globalMap.put("resultList", new ArrayList<String>());
-        helper.warmUpWithFacts(facts, globalMap, 20);
+        helper.warmUpWithFacts(facts, globalMap, 100);
         //------------------------------------
         
         runTest(kBase);
