@@ -25,7 +25,7 @@ import com.sample.Person;
 /**
  * This is a sample class to launch a rule.
  */
-public class AlphaAndFullWarmUpTest extends MultiThreadTestBase {
+public class FullWarmUp100Test extends MultiThreadTestBase {
     
     @Test
     public void testRule() throws Exception {
@@ -35,15 +35,14 @@ public class AlphaAndFullWarmUpTest extends MultiThreadTestBase {
         //------------------------------------
         WarmUpHelper helper = new WarmUpHelper();
         helper.analyze(kBase);
-        helper.optimizeAlphaNodeConstraints();
-        
+
         Object[] facts = new Object[MultiThreadTestBase.RULE_NUM];
         for (int i = 0; i < MultiThreadTestBase.RULE_NUM; i++) {
             facts[i] = new Person("John" + i, i * 5);
         }
         HashMap<String, Object> globalMap = new HashMap<String, Object>();
         globalMap.put("resultList", new ArrayList<String>());
-        helper.warmUpWithFacts(facts, globalMap);
+        helper.warmUpWithFacts(facts, globalMap, 100);
         //------------------------------------
         
         runTest(kBase);

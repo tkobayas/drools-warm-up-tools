@@ -27,7 +27,7 @@ public class ThroughputObserver implements Runnable {
         
         while (true) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -38,8 +38,10 @@ public class ThroughputObserver implements Runnable {
                 break;
             }
             
-            System.out.println((lastTime - startTime) + " -> " + (currentTime - startTime)
-                    + " : throughput = " + ((double)(currentNum - lastNum)/(currentTime - lastTime)) + "(num/ms)");
+//            System.out.println((lastTime - startTime) + " -> " + (currentTime - startTime)
+//                    + " : throughput = " + ((double)(currentNum - lastNum)/(currentTime - lastTime)) + "(num/ms)");
+            
+            System.out.println(((double)(currentNum - lastNum)/(currentTime - lastTime)));
             
             lastNum = currentNum;
             lastTime = currentTime;

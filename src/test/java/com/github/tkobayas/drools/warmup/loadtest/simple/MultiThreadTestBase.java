@@ -69,7 +69,7 @@ public class MultiThreadTestBase {
                         e.printStackTrace();
                     }
 
-                    for (int i = 0; i < (10000 / RULE_NUM); i++) {
+                    for (int i = 0; i < (30000 / RULE_NUM); i++) {
                         for (int j = 0; j < RULE_NUM * 5; j += 5) {
                             Person p = new Person("John-" + x + "-" + i + "-" + j, j);
                             FactHandle factHandle = kSession.insert(p);

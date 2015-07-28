@@ -95,7 +95,9 @@
           <configuration>
             <argLine>-Xms8G -Xmx8G -XX:+UseConcMarkSweepGC
               -XX:+CMSClassUnloadingEnabled</argLine>
-            <!-- <argLine>-Xmx4G</argLine> -->
+<!--             <argLine>-Xms8G -Xmx8G -XX:+UseConcMarkSweepGC -->
+<!--               -XX:+CMSClassUnloadingEnabled -verbose:gc -->
+<!--               -XX:+PrintGCDetails</argLine> -->
           </configuration>
         </plugin>
       </plugins>
