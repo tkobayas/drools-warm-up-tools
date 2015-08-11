@@ -1,0 +1,10 @@
+package com.sample
+ 
+import com.sample.*;
+ 
+rule "Find juniors and seniors"
+  when
+    $p : Person( age < 18 || age > 65 )
+  then
+  	System.out.println("fired!");
+end
