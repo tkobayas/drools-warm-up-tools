@@ -1,0 +1,10 @@
+package com.sample
+ 
+import com.sample.sandbox.*;
+ 
+rule "nested property"
+  when
+    $p : ComplexPerson( address == null || address.town == "London" )
+  then
+  	System.out.println("fired!");
+end

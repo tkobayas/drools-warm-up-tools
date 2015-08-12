@@ -1,17 +1,19 @@
-package com.sample;
+package com.sample.sandbox;
 
-public class Employee {
+public class ComplexPerson {
 
     private String name;
-
-    private int age;
     
-    public Employee() {
+    private Address address;
+
+    
+    
+    public ComplexPerson() {
     }
 
-    public Employee(String name, int age) {
+    public ComplexPerson(String name, Address address) {
         this.name = name;
-        this.age = age;
+        this.address = address;
     }
 
     public String getName() {
@@ -22,19 +24,19 @@ public class Employee {
         this.name = name;
     }
 
-    public int getAge() {
-        return age;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + age;
+        result = prime * result + ((address == null) ? 0 : address.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
@@ -47,8 +49,11 @@ public class Employee {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Employee other = (Employee) obj;
-        if (age != other.age)
+        ComplexPerson other = (ComplexPerson) obj;
+        if (address == null) {
+            if (other.address != null)
+                return false;
+        } else if (!address.equals(other.address))
             return false;
         if (name == null) {
             if (other.name != null)
@@ -57,6 +62,6 @@ public class Employee {
             return false;
         return true;
     }
-
+    
     
 }
